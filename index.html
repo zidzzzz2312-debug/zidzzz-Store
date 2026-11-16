@@ -1,0 +1,2387 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zidzzz Store — Platform Top-Up Game & Produk Digital Instan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        cyber: {
+                            bg: '#07090f',
+                            card: '#0f131f',
+                            cardHover: '#151b2b',
+                            border: '#1e273d',
+                            primary: '#6366f1',
+                            accent: '#06b6d4',
+                            emerald: '#10b981',
+                            purple: '#a855f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #07090f;
+            color: #f1f5f9;
+            background-image: 
+                radial-gradient(circle at 12% 10%, rgba(99, 102, 241, 0.1) 0%, transparent 42%),
+                radial-gradient(circle at 88% 85%, rgba(6, 182, 212, 0.09) 0%, transparent 42%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar { width: 7px; height: 7px; }
+        ::-webkit-scrollbar-track { background: #07090f; }
+        ::-webkit-scrollbar-thumb { background: #1e273d; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+        .glass-panel {
+            background: rgba(15, 19, 31, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(30, 39, 61, 0.92);
+        }
+        .neon-border-hover:hover {
+            border-color: rgba(6, 182, 212, 0.65);
+            box-shadow: 0 10px 28px -6px rgba(6, 182, 212, 0.18);
+            transform: translateY(-2px);
+        }
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+        button, a, input, select, textarea { touch-action: manipulation; }
+    </style>
+</head>
+<body class="antialiased selection:bg-indigo-500 selection:text-white flex flex-col min-h-screen">
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container" class="fixed top-5 right-5 z-[110] flex flex-col gap-3 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+    <!-- MAINTENANCE OVERLAY -->
+    <div id="maintenance-screen" class="hidden fixed inset-0 z-50 bg-[#07090f] flex flex-col items-center justify-center p-6 text-center overflow-y-auto">
+        <div class="relative z-10 max-w-xl w-full glass-panel rounded-3xl p-8 sm:p-10 border border-amber-500/40 shadow-2xl">
+            <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-4xl animate-pulse">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+            </div>
+            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 mb-4">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span> SYSTEM MAINTENANCE
+            </span>
+            <h1 id="maint-store-title" class="font-display text-3xl sm:text-4xl font-bold text-white mb-4">Zidzzz Store Sedang Maintenance</h1>
+            <p id="maint-message-display" class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+                Kami sedang melakukan peningkatan sistem, sinkronisasi API supplier, dan pembaruan stok otomatis.
+            </p>
+        </div>
+        <button onclick="openStaffAccess()" class="fixed bottom-5 right-5 z-50 px-4 py-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold flex items-center gap-2 shadow-lg">
+            <i class="fa-solid fa-user-shield text-indigo-400"></i><span>Akses Staf</span>
+        </button>
+    </div>
+
+    <!-- NAVBAR -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-cyber-border">
+        <div id="announcement-bar" class="bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-600 text-white text-xs sm:text-sm py-2 px-4 text-center font-medium">
+            <i class="fa-solid fa-bolt mr-1.5 text-amber-300"></i>
+            <span id="announcement-text">Enterprise Promo! Gunakan kode kupon ZIDZZZ20 untuk diskon 20% atau HEMAT5K potongan Rp 5.000!</span>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
+            <div onclick="switchView('store')" class="flex items-center gap-3 cursor-pointer group shrink-0">
+                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[2px] shadow-lg group-hover:scale-105 transition">
+                    <div class="w-full h-full bg-cyber-bg rounded-[10px] flex items-center justify-center">
+                        <i class="fa-solid fa-shield-cat text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400 text-xl"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 id="nav-store-name" class="font-display text-lg sm:text-2xl font-bold tracking-tight text-white flex items-center gap-1.5">
+                        Zidzzz <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400">Store</span>
+                    </h1>
+                    <p class="text-[11px] text-slate-400 hidden sm:block">Enterprise Top-Up & Digital Goods</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-1.5 sm:gap-2.5">
+                <!-- Staff Active Role Pill -->
+                <span id="nav-staff-session-pill" class="hidden px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-xs font-semibold items-center gap-1">
+                    <i class="fa-solid fa-user-check"></i><span id="nav-role-display">Owner</span>
+                </span>
+
+                <button onclick="switchView('store')" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-medium bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-500/25 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-store"></i><span class="hidden lg:inline">Etalase</span>
+                </button>
+
+                <!-- Notification Bell -->
+                <div class="relative">
+                    <button onclick="toggleNotificationDrawer()" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 border border-slate-700/80 transition relative">
+                        <i class="fa-solid fa-bell text-amber-400"></i>
+                        <span id="nav-notif-dot" class="hidden absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-rose-500 ring-2 ring-slate-900"></span>
+                    </button>
+                    <!-- Notification Dropdown -->
+                    <div id="notif-dropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 glass-panel rounded-2xl border border-slate-700 shadow-2xl z-50 overflow-hidden">
+                        <div class="p-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+                            <span class="text-xs font-bold uppercase tracking-wider text-white"><i class="fa-solid fa-bell text-amber-400 mr-1.5"></i>Notifikasi Status Pesanan</span>
+                            <button onclick="markAllNotifsRead()" class="text-[11px] text-cyan-400 hover:underline">Tandai Dibaca</button>
+                        </div>
+                        <div id="notif-list" class="max-h-72 overflow-y-auto divide-y divide-slate-800/80 text-xs"></div>
+                    </div>
+                </div>
+
+                <button onclick="openOrderHistoryModal()" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-medium bg-slate-800/80 hover:bg-slate-800 text-slate-300 border border-slate-700/80 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-receipt text-cyan-400"></i>
+                    <span class="hidden md:inline">Lacak Pesanan</span>
+                    <span id="nav-order-badge" class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">0</span>
+                </button>
+
+                <button onclick="openHelpTicketModal()" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-medium bg-slate-800/80 hover:bg-slate-800 text-slate-300 border border-slate-700/80 transition flex items-center gap-1.5 relative">
+                    <i class="fa-solid fa-headset text-purple-400"></i>
+                    <span class="hidden md:inline">Bantuan</span>
+                </button>
+
+                <button onclick="openStaffAccess()" id="nav-btn-staff" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-500/25 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span id="nav-btn-staff-label" class="hidden sm:inline">Admin Dashboard</span>
+                </button>
+
+                <button onclick="logoutStaff()" id="nav-btn-logout-staff" title="Keluar Staf" class="hidden p-2.5 rounded-xl text-xs font-semibold bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 transition">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- VIEW 1: STOREFRONT -->
+    <main id="view-storefront" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
+        <!-- Hero Banner -->
+        <section class="relative overflow-hidden rounded-3xl border border-indigo-500/30 bg-gradient-to-br from-[#11162b] via-[#15132e] to-[#0c1d2b] p-6 sm:p-10 shadow-2xl">
+            <div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <div class="space-y-4 max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        AUTOMATIC SUPPLIER FULFILLMENT 24/7
+                    </div>
+                    <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
+                        Top-Up Game & Produk Digital <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-400">Otomatis Dalam Detik</span>
+                    </h2>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                        Terhubung langsung ke API Supplier resmi. Pembayaran terverifikasi otomatis memicu pengiriman item instan dengan Serial Number (SN) real-time.
+                    </p>
+                    <div id="hero-active-coupons" class="flex flex-wrap items-center gap-2 pt-1"></div>
+                </div>
+                <div class="glass-panel rounded-2xl p-4 border border-cyan-500/25 w-full lg:w-72 shrink-0 space-y-2.5 text-xs">
+                    <div class="font-bold text-white flex items-center gap-2"><i class="fa-solid fa-diagram-project text-cyan-400"></i> Alur Otomatisasi Sistem</div>
+                    <div class="flex items-center gap-2 text-slate-300"><span class="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-300 flex items-center justify-center font-bold">1</span> Pelanggan Checkout & Bayar</div>
+                    <div class="flex items-center gap-2 text-slate-300"><span class="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-300 flex items-center justify-center font-bold">2</span> Verifikasi Pembayaran</div>
+                    <div class="flex items-center gap-2 text-slate-300"><span class="w-5 h-5 rounded-full bg-purple-500/20 text-purple-300 flex items-center justify-center font-bold">3</span> API Supplier Auto-Fulfill</div>
+                    <div class="flex items-center gap-2 text-emerald-400 font-semibold"><span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold">4</span> Pesanan Selesai + SN</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STEP 1: GAME / SERVICE SELECTION -->
+        <section id="step-game-selection" class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h3 class="font-display text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+                        <span class="w-1.5 h-6 rounded-full bg-gradient-to-b from-cyan-400 to-indigo-500"></span>
+                        1. Pilih Game / Layanan Digital
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-1">Klik kategori layanan untuk melihat paket nominal, harga, dan ulasan pembeli.</p>
+                </div>
+                <div class="relative w-full md:w-80 shrink-0">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" id="game-search-input" oninput="renderGameSelection()" placeholder="Cari Mobile Legends, Roblox, PUBG..." 
+                        class="w-full pl-11 pr-4 py-2.5 rounded-xl bg-cyber-card border border-cyber-border focus:border-cyan-400 focus:outline-none text-sm text-white placeholder-slate-500 transition">
+                </div>
+            </div>
+
+            <div id="game-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+            <div id="empty-game-state" class="hidden py-16 text-center glass-panel rounded-3xl border border-slate-800">
+                <i class="fa-solid fa-gamepad text-4xl text-slate-600 mb-3"></i>
+                <h4 class="text-lg font-bold text-white mb-1">Layanan Tidak Ditemukan</h4>
+                <p class="text-sm text-slate-400">Coba kata kunci lain atau tambahkan produk baru melalui Admin Dashboard.</p>
+            </div>
+        </section>
+
+        <!-- STEP 2: NOMINAL / ITEM SELECTION -->
+        <section id="step-product-selection" class="hidden space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <button onclick="backToGameSelection()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 text-xs sm:text-sm font-semibold transition shadow-md">
+                    <i class="fa-solid fa-arrow-left text-cyan-400"></i>
+                    <span>Kembali ke Pilih Game / Layanan</span>
+                </button>
+                <div class="text-xs text-slate-400 flex items-center gap-2">
+                    <span onclick="backToGameSelection()" class="hover:text-cyan-400 cursor-pointer">Kategori</span>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    <span id="breadcrumb-game-name" class="text-white font-semibold">Mobile Legends</span>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-3xl p-6 sm:p-8 border border-cyan-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+                <div class="flex items-center gap-4 sm:gap-5">
+                    <div id="selected-game-icon" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/20 border border-cyan-400/30 flex items-center justify-center text-3xl sm:text-4xl text-cyan-400 shrink-0 shadow-lg">
+                        <i class="fa-solid fa-gem"></i>
+                    </div>
+                    <div>
+                        <span id="selected-game-publisher" class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 mb-1.5">Official API Supplier</span>
+                        <h3 id="selected-game-title" class="font-display text-2xl sm:text-3xl font-bold text-white">Mobile Legends</h3>
+                        <p id="selected-game-guide" class="text-xs sm:text-sm text-slate-300 mt-1">Pilih nominal item di bawah ini.</p>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
+                    <select id="store-sort-select" onchange="renderProductListForGame()" class="px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-xs sm:text-sm text-white focus:border-cyan-400 focus:outline-none">
+                        <option value="default">Urutkan: Default</option>
+                        <option value="price-asc">Harga Terendah</option>
+                        <option value="price-desc">Harga Tertinggi</option>
+                        <option value="rating-desc">Rating Tertinggi</option>
+                    </select>
+                    <div class="relative w-full sm:w-60">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" id="store-search-input" oninput="renderProductListForGame()" placeholder="Cari nominal..." 
+                            class="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 focus:border-cyan-400 focus:outline-none text-xs sm:text-sm text-white placeholder-slate-500 transition">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <h4 class="font-display text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+                    <span class="w-1.5 h-5 rounded-full bg-gradient-to-b from-cyan-400 to-indigo-500"></span>
+                    2. Pilih Nominal & Item
+                </h4>
+                <span id="product-count-label" class="text-xs sm:text-sm text-slate-400">Menampilkan semua item</span>
+            </div>
+
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+            <div id="empty-store-state" class="hidden py-16 text-center glass-panel rounded-3xl border border-slate-800">
+                <h4 class="text-lg font-bold text-white mb-1">Nominal Item Tidak Ditemukan</h4>
+            </div>
+        </section>
+    </main>
+
+    <!-- VIEW 2: ENTERPRISE STAFF DASHBOARD -->
+    <main id="view-staff-dashboard" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+        <div class="glass-panel rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-indigo-500/30">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 text-2xl shrink-0">
+                    <i class="fa-solid fa-gauge-high"></i>
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <h2 class="font-display text-xl sm:text-2xl font-bold text-white">Enterprise Admin Dashboard</h2>
+                        <span id="staff-role-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">Role: Owner</span>
+                        <span id="staff-maint-badge" class="hidden px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">MAINTENANCE AKTIF</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Kelola fulfillment otomatis, katalog produk, kupon promo, tiket bantuan, dan audit log staf.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2.5">
+                <button onclick="switchView('store')" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-medium border border-slate-700 transition flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-cyan-400"></i><span>Lihat Etalase</span>
+                </button>
+                <button onclick="logoutStaff()" class="px-4 py-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 text-xs sm:text-sm font-medium border border-rose-500/30 transition flex items-center gap-2">
+                    <i class="fa-solid fa-right-from-bracket"></i><span>Keluar</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- RBAC Navigation Tabs -->
+        <div id="staff-tabs-bar" class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-800">
+            <button onclick="switchStaffTab('stats')" id="tab-btn-stats" data-tab="stats" class="staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-600 text-white transition flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-chart-pie"></i> Statistik & Laporan
+            </button>
+            <button onclick="switchStaffTab('orders')" id="tab-btn-orders" data-tab="orders" class="staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-cyber-card text-slate-400 hover:text-white border border-cyber-border transition flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-bolt"></i> Automatic Fulfillment & Pesanan
+            </button>
+            <button onclick="switchStaffTab('products')" id="tab-btn-products" data-tab="products" class="staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-cyber-card text-slate-400 hover:text-white border border-cyber-border transition flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-cubes"></i> Manajemen Produk
+            </button>
+            <button onclick="switchStaffTab('coupons')" id="tab-btn-coupons" data-tab="coupons" class="staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-cyber-card text-slate-400 hover:text-white border border-cyber-border transition flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-ticket"></i> Voucher & Promo
+            </button>
+            <button onclick="switchStaffTab('tickets')" id="tab-btn-tickets" data-tab="tickets" class="staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-cyber-card text-slate-400 hover:text-white border border-cyber-border transition flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-headset"></i> Pusat Bantuan / Tiket
+            </button>
+            <button onclick="switchStaffTab('roles')" id="tab-btn-roles" data-tab="roles" class="staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-cyber-card text-slate-400 hover:text-white border border-cyber-border transition flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-user-shield"></i> Hak Akses & Log Staf
+            </button>
+            <button onclick="switchStaffTab('settings')" id="tab-btn-settings" data-tab="settings" class="staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-cyber-card text-slate-400 hover:text-white border border-cyber-border transition flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-sliders"></i> Pengaturan & Maintenance
+            </button>
+        </div>
+
+        <!-- TAB 1: STATISTIK & LAPORAN -->
+        <div id="staff-tab-stats" class="staff-tab-content space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div class="glass-panel rounded-2xl p-5 border border-emerald-500/25">
+                    <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase"><span>Total Pendapatan</span><i class="fa-solid fa-sack-dollar text-emerald-400"></i></div>
+                    <div id="stat-revenue" class="font-display text-2xl font-bold text-white mt-2">Rp 0</div>
+                    <div class="text-[11px] text-emerald-400 mt-1">Dari transaksi berhasil</div>
+                </div>
+                <div class="glass-panel rounded-2xl p-5 border border-cyan-500/25">
+                    <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase"><span>Total Transaksi</span><i class="fa-solid fa-receipt text-cyan-400"></i></div>
+                    <div id="stat-orders" class="font-display text-2xl font-bold text-white mt-2">0</div>
+                    <div id="stat-success-rate" class="text-[11px] text-cyan-400 mt-1">Success Rate: 100%</div>
+                </div>
+                <div class="glass-panel rounded-2xl p-5 border border-indigo-500/25">
+                    <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase"><span>Pelanggan Unik</span><i class="fa-solid fa-users text-indigo-400"></i></div>
+                    <div id="stat-customers" class="font-display text-2xl font-bold text-white mt-2">0</div>
+                    <div class="text-[11px] text-slate-400 mt-1">ID/Nomor tujuan aktif</div>
+                </div>
+                <div class="glass-panel rounded-2xl p-5 border border-rose-500/25">
+                    <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase"><span>Gagal / Refund</span><i class="fa-solid fa-triangle-exclamation text-rose-400"></i></div>
+                    <div id="stat-failed" class="font-display text-2xl font-bold text-rose-400 mt-2">0</div>
+                    <div class="text-[11px] text-slate-400 mt-1">Stok otomatis dipulihkan</div>
+                </div>
+                <div class="glass-panel rounded-2xl p-5 border border-purple-500/25">
+                    <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase"><span>Tiket Bantuan</span><i class="fa-solid fa-headset text-purple-400"></i></div>
+                    <div id="stat-tickets" class="font-display text-2xl font-bold text-white mt-2">0</div>
+                    <div class="text-[11px] text-purple-300 mt-1">Menunggu balasan CS</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="glass-panel rounded-2xl p-6 border border-cyber-border space-y-4">
+                    <h3 class="font-display text-lg font-bold text-white"><i class="fa-solid fa-server text-cyan-400 mr-2"></i>Supplier API Health & Fulfillment Engine</h3>
+                    <div class="space-y-3">
+                        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <div>
+                                    <div class="text-sm font-bold text-white">Digiflazz & VIP Reseller H2H</div>
+                                    <div class="text-xs text-slate-400">Saldo Deposit: Rp 14.850.000 • Ping: 88ms</div>
+                                </div>
+                            </div>
+                            <button onclick="pingSupplierApi()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition">Test Ping API</button>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+                                <div>
+                                    <div class="text-sm font-bold text-white">Roblox & Voucher Digital Webhook</div>
+                                    <div class="text-xs text-slate-400">Auto-SN Generator: Ready • Uptime 99.98%</div>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 text-xs font-bold">ONLINE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-6 border border-cyber-border space-y-4">
+                    <h3 class="font-display text-lg font-bold text-white"><i class="fa-solid fa-fire text-amber-400 mr-2"></i>Produk Terlaris & Performa Penjualan</h3>
+                    <div id="top-products-list" class="space-y-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: AUTOMATIC FULFILLMENT & PESANAN -->
+        <div id="staff-tab-orders" class="hidden staff-tab-content space-y-6">
+            <div class="glass-panel rounded-2xl border border-cyber-border overflow-hidden">
+                <div class="p-5 border-b border-cyber-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="font-display text-lg font-bold text-white">Antrean Automatic Product Fulfillment & Pesanan</h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Klik <strong class="text-cyan-400">Auto-Fulfill API</strong> untuk memproses pesanan menunggu/diproses secara otomatis via supplier, atau ubah status manual.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <select id="staff-order-filter" onchange="renderStaffOrdersTable()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                            <option value="ALL">Semua Status</option>
+                            <option value="Menunggu">Menunggu</option>
+                            <option value="Diproses">Diproses</option>
+                            <option value="Berhasil">Berhasil</option>
+                            <option value="Gagal">Gagal</option>
+                            <option value="Refund">Refund</option>
+                        </select>
+                        <button onclick="clearAllOrders()" class="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-semibold border border-rose-500/30 transition">
+                            Bersihkan
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/80 text-slate-400 text-xs uppercase border-b border-cyber-border">
+                                <th class="p-4">Invoice & Waktu</th>
+                                <th class="p-4">Produk & Qty</th>
+                                <th class="p-4">Tujuan & SN Supplier</th>
+                                <th class="p-4">Total Bayar</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4 text-right">Aksi Fulfillment</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staff-orders-tbody" class="divide-y divide-cyber-border text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: MANAJEMEN PRODUK -->
+        <div id="staff-tab-products" class="hidden staff-tab-content space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="glass-panel rounded-2xl p-6 border border-cyber-border h-fit">
+                    <h3 id="product-form-title" class="font-display text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle text-cyan-400"></i> Tambah / Edit Produk
+                    </h3>
+                    <form id="product-form" onsubmit="handleSaveProduct(event)" class="space-y-3.5">
+                        <input type="hidden" id="prod-id">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Produk *</label>
+                            <input type="text" id="prod-name" required placeholder="Contoh: 800 Robux Gift / Top-Up" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Kategori *</label>
+                                <input type="text" id="prod-category" required placeholder="Mobile Legends" list="category-suggestions" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                                <datalist id="category-suggestions">
+                                    <option value="Mobile Legends">
+                                    <option value="Free Fire">
+                                    <option value="Valorant">
+                                    <option value="PUBG Mobile">
+                                    <option value="Roblox">
+                                    <option value="Pulsa & E-Wallet">
+                                    <option value="Aplikasi Premium">
+                                </datalist>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Badge Promo</label>
+                                <input type="text" id="prod-badge" placeholder="Terlaris" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Format Input Data Pelanggan *</label>
+                            <select id="prod-field-type" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                                <option value="auto">Otomatis sesuai kategori</option>
+                                <option value="game_id_zone">Game: User ID + Zone ID (MLBB)</option>
+                                <option value="player_id">Game: Player / Character ID (FF/PUBG)</option>
+                                <option value="riot_id">Valorant: Riot ID + Tagline</option>
+                                <option value="roblox_user">Roblox: Username Roblox</option>
+                                <option value="phone">Nomor HP (Pulsa / E-Wallet)</option>
+                                <option value="email">Email Aktif (Aplikasi Premium)</option>
+                                <option value="none">Tanpa Input Tujuan (Voucher Kode)</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Harga (Rp) *</label>
+                                <input type="number" id="prod-price" required min="100" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Stok *</label>
+                                <input type="number" id="prod-stock" required min="0" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Ikon FontAwesome</label>
+                                <input type="text" id="prod-icon" placeholder="fa-gem" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">URL Gambar (Opsional)</label>
+                                <input type="url" id="prod-image" placeholder="https://..." class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Deskripsi Produk</label>
+                            <textarea id="prod-desc" rows="2" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white"></textarea>
+                        </div>
+                        <div class="flex gap-2 pt-1">
+                            <button type="submit" class="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-white font-semibold text-sm shadow-lg">Simpan Produk</button>
+                            <button type="button" id="prod-cancel-edit-btn" onclick="resetProductForm()" class="hidden py-2.5 px-3.5 rounded-xl bg-slate-800 text-slate-300 text-sm">Batal</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="lg:col-span-2 glass-panel rounded-2xl border border-cyber-border overflow-hidden">
+                    <div class="p-5 border-b border-cyber-border flex items-center justify-between">
+                        <h3 class="font-display text-lg font-bold text-white">Katalog Produk & Kontrol Stok Real-Time</h3>
+                        <span id="staff-total-products-badge" class="text-xs text-slate-400">0 Produk</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-900/80 text-slate-400 text-xs uppercase border-b border-cyber-border">
+                                    <th class="p-4">Produk & Format</th>
+                                    <th class="p-4">Harga</th>
+                                    <th class="p-4">Stok</th>
+                                    <th class="p-4 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="staff-products-tbody" class="divide-y divide-cyber-border text-sm"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: VOUCHER & PROMO -->
+        <div id="staff-tab-coupons" class="hidden staff-tab-content space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="glass-panel rounded-2xl p-6 border border-cyber-border h-fit">
+                    <h3 class="font-display text-lg font-bold text-white mb-4">Buat Voucher & Promo Baru</h3>
+                    <form onsubmit="handleCreateCoupon(event)" class="space-y-3.5">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Kode Kupon *</label>
+                            <input type="text" id="coup-code" required placeholder="ZIDZZZ20" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white uppercase font-mono">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Tipe Diskon *</label>
+                                <select id="coup-type" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                                    <option value="percent">Persentase (%)</option>
+                                    <option value="fixed">Potongan Harga (Rp)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Nilai Diskon *</label>
+                                <input type="number" id="coup-value" required min="1" placeholder="20 atau 5000" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Batas Penggunaan (Kuota) *</label>
+                            <input type="number" id="coup-limit" required min="1" value="100" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Waktu Mulai *</label>
+                            <input type="datetime-local" id="coup-start" required class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Waktu Berakhir *</label>
+                            <input type="datetime-local" id="coup-end" required class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                        </div>
+                        <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold text-sm shadow-lg">Aktifkan Voucher</button>
+                    </form>
+                </div>
+
+                <div class="lg:col-span-2 glass-panel rounded-2xl border border-cyber-border overflow-hidden">
+                    <div class="p-5 border-b border-cyber-border">
+                        <h3 class="font-display text-lg font-bold text-white">Daftar Voucher Aktif & Kuota Penggunaan</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-900/80 text-slate-400 text-xs uppercase border-b border-cyber-border">
+                                    <th class="p-4">Kode</th>
+                                    <th class="p-4">Potongan</th>
+                                    <th class="p-4">Kuota Terpakai</th>
+                                    <th class="p-4">Status</th>
+                                    <th class="p-4 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="staff-coupons-tbody" class="divide-y divide-cyber-border text-sm"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: PUSAT BANTUAN / TIKET -->
+        <div id="staff-tab-tickets" class="hidden staff-tab-content space-y-6">
+            <div class="glass-panel rounded-2xl border border-cyber-border overflow-hidden">
+                <div class="p-5 border-b border-cyber-border">
+                    <h3 class="font-display text-lg font-bold text-white">Tiket Bantuan & Komplain Pelanggan</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Balas kendala pelanggan secara langsung; balasan akan muncul di modal Pusat Bantuan pelanggan.</p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/80 text-slate-400 text-xs uppercase border-b border-cyber-border">
+                                <th class="p-4">Tiket & Invoice</th>
+                                <th class="p-4">Pelanggan</th>
+                                <th class="p-4">Keluhan & Balasan CS</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staff-tickets-tbody" class="divide-y divide-cyber-border text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: HAK AKSES & LOG AKTIVITAS STAF -->
+        <div id="staff-tab-roles" class="hidden staff-tab-content space-y-6">
+            <div class="glass-panel rounded-2xl p-6 border border-indigo-500/30 space-y-5">
+                <div>
+                    <h3 class="font-display text-xl font-bold text-white">Matriks Hak Akses Staf (RBAC)</h3>
+                    <p class="text-xs text-slate-400 mt-1">Setiap peran memiliki batasan akses modul sesuai standar operasional enterprise.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="p-4 rounded-2xl bg-slate-900 border border-indigo-500/40 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-indigo-400 text-sm">Owner</span>
+                            <span class="text-[10px] font-mono bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded">PIN: admin123</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Akses penuh ke seluruh fitur, keuangan, maintenance, produk, dan audit log.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-slate-900 border border-cyan-500/40 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-cyan-400 text-sm">Admin</span>
+                            <span class="text-[10px] font-mono bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded">PIN: admin456</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Statistik, Fulfillment Pesanan, Manajemen Produk, Voucher Promo, dan Tiket.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-slate-900 border border-purple-500/40 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-purple-400 text-sm">CS (Customer Service)</span>
+                            <span class="text-[10px] font-mono bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded">PIN: cs123</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Menangani Pusat Bantuan/Tiket pelanggan serta pemantauan/refund pesanan.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-slate-900 border border-amber-500/40 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-amber-400 text-sm">Operator</span>
+                            <span class="text-[10px] font-mono bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">PIN: op123</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Fokus mengeksekusi antrean Automatic Fulfillment & status pengiriman pesanan.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Audit Log -->
+            <div class="glass-panel rounded-2xl border border-cyber-border overflow-hidden">
+                <div class="p-5 border-b border-cyber-border flex items-center justify-between">
+                    <div>
+                        <h3 class="font-display text-lg font-bold text-white"><i class="fa-solid fa-clock-rotate-left text-cyan-400 mr-2"></i>Log Aktivitas Staf (Audit Trail)</h3>
+                        <p class="text-xs text-slate-400">Mencatat seluruh riwayat login, pemrosesan pesanan, perubahan stok/harga, dan pengaturan sistem.</p>
+                    </div>
+                    <button onclick="clearAuditLogs()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs">Bersihkan Log</button>
+                </div>
+                <div id="staff-audit-log-list" class="max-h-80 overflow-y-auto divide-y divide-slate-800/80 text-xs"></div>
+            </div>
+        </div>
+
+        <!-- TAB 7: PENGATURAN & MAINTENANCE -->
+        <div id="staff-tab-settings" class="hidden staff-tab-content max-w-3xl">
+            <div class="glass-panel rounded-2xl p-6 sm:p-8 border border-cyber-border space-y-6">
+                <div class="p-5 rounded-2xl bg-slate-900/90 border border-amber-500/30 flex items-center justify-between gap-4">
+                    <div>
+                        <h4 class="font-bold text-white text-base">Mode Maintenance Etalase</h4>
+                        <p class="text-xs text-slate-400 mt-0.5">Kunci akses etalase publik saat pemeliharaan server atau API supplier.</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input type="checkbox" id="setting-maint-toggle" class="sr-only peer" onchange="toggleMaintenanceImmediate(this.checked)">
+                        <div class="w-14 h-7 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-amber-500"></div>
+                    </label>
+                </div>
+
+                <form onsubmit="handleSaveSettings(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Pesan Layar Maintenance</label>
+                        <textarea id="setting-maint-msg" rows="2" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white"></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Nama Toko</label>
+                            <input type="text" id="setting-store-name" required class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Nomor WhatsApp Admin (628xxx)</label>
+                            <input type="text" id="setting-admin-wa" placeholder="6281234567890" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white font-mono">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">PIN Owner Utama</label>
+                            <input type="password" id="setting-staff-pin" required class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Teks Pengumuman Banner</label>
+                            <input type="text" id="setting-announcement" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                        </div>
+                    </div>
+                    <div class="pt-3 flex justify-between border-t border-slate-800">
+                        <button type="button" onclick="resetDefaultDemoData()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium">Reset Data Demo</button>
+                        <button type="submit" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-semibold text-sm shadow-lg">Simpan Pengaturan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-16 border-t border-cyber-border bg-[#05070c]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-shield-cat text-cyan-400 text-base"></i>
+                <span>&copy; 2026 <strong class="text-white">Zidzzz Store</strong>. All rights reserved. Automated Digital Fulfillment.</span>
+            </div>
+            <div class="flex items-center gap-5">
+                <button onclick="openLegalModal('tos')" class="hover:text-cyan-400 transition">Syarat Layanan</button>
+                <button onclick="openLegalModal('privacy')" class="hover:text-cyan-400 transition">Kebijakan Privasi</button>
+                <button onclick="openHelpTicketModal()" class="hover:text-cyan-400 transition">Pusat Bantuan</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL: CHECKOUT -->
+    <div id="checkout-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="glass-panel rounded-3xl max-w-xl w-full border border-indigo-500/30 shadow-2xl overflow-hidden my-auto">
+            <div class="p-5 sm:p-6 bg-gradient-to-r from-indigo-950/90 to-slate-900 border-b border-cyber-border flex items-center justify-between">
+                <div>
+                    <span id="co-prod-category" class="text-[11px] font-bold uppercase tracking-wider text-cyan-400">Game</span>
+                    <h3 id="co-prod-name" class="font-display text-lg sm:text-xl font-bold text-white">Produk</h3>
+                    <p id="co-prod-stock-info" class="text-xs text-emerald-400">Stok tersedia</p>
+                </div>
+                <button onclick="closeCheckoutModal()" class="w-9 h-9 rounded-xl bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-5 sm:p-6 space-y-5 max-h-[75vh] overflow-y-auto">
+                <div class="space-y-3">
+                    <label class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-300">
+                        <span class="w-5 h-5 rounded-full bg-indigo-500 text-white flex items-center justify-center text-[11px]">1</span>
+                        Data Tujuan Pengiriman
+                    </label>
+                    <div id="co-customer-fields" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-300 mb-2">2. Jumlah Beli</label>
+                        <div class="flex items-center bg-slate-900 border border-slate-700 rounded-xl p-1">
+                            <button type="button" onclick="changeCheckoutQty(-1)" class="w-9 h-9 rounded-lg bg-slate-800 text-white font-bold">-</button>
+                            <input type="number" id="co-qty" value="1" min="1" onchange="updateCheckoutSummary()" class="w-full text-center bg-transparent text-white font-bold text-sm focus:outline-none">
+                            <button type="button" onclick="changeCheckoutQty(1)" class="w-9 h-9 rounded-lg bg-slate-800 text-white font-bold">+</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-300 mb-2">Kode Kupon / Voucher</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="co-coupon-input" placeholder="ZIDZZZ20" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white uppercase font-mono">
+                            <button type="button" onclick="applyCouponInCheckout()" class="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shrink-0">Pakai</button>
+                        </div>
+                        <p id="co-coupon-feedback" class="text-[11px] mt-1.5 hidden"></p>
+                    </div>
+                </div>
+
+                <div class="space-y-2.5">
+                    <label class="block text-xs font-bold uppercase text-slate-300">3. Metode Pembayaran</label>
+                    <div id="co-payment-methods" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+                    <div id="co-payment-detail-box" class="hidden p-4 rounded-2xl bg-slate-900/95 border border-cyan-500/30 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-slate-400">Tujuan (<span id="co-pay-selected-name" class="text-cyan-400 font-semibold"></span>)</span>
+                            <button type="button" onclick="copyPaymentAccount()" class="text-xs px-2.5 py-1 rounded-lg bg-cyan-500/15 text-cyan-300 font-medium">Salin Nomor</button>
+                        </div>
+                        <div class="flex items-center justify-between bg-slate-950 px-3.5 py-2.5 rounded-xl border border-slate-800">
+                            <span id="co-pay-account-number" class="font-mono text-sm font-bold text-white"></span>
+                            <span id="co-pay-account-holder" class="text-xs text-slate-400"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2 text-sm">
+                    <div class="flex justify-between text-slate-400">
+                        <span>Subtotal (<span id="co-summary-qty">1</span>x)</span>
+                        <span id="co-summary-subtotal">Rp 0</span>
+                    </div>
+                    <div id="co-discount-row" class="hidden flex justify-between text-emerald-400 font-medium">
+                        <span id="co-summary-disc-label">Diskon Voucher</span>
+                        <span id="co-summary-discount">- Rp 0</span>
+                    </div>
+                    <div class="pt-2 border-t border-slate-800 flex justify-between items-center">
+                        <span class="font-bold text-white">Total Pembayaran</span>
+                        <span id="co-summary-total" class="font-display text-xl font-bold text-cyan-400">Rp 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-5 bg-slate-900/90 border-t border-cyber-border flex items-center justify-between gap-3">
+                <div id="co-role-indicator" class="text-xs"></div>
+                <div class="flex items-center gap-3">
+                    <button type="button" onclick="closeCheckoutModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-sm">Batal</button>
+                    <button type="button" onclick="confirmCheckoutOrder()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-sm shadow-lg flex items-center gap-2">
+                        <i class="fa-solid fa-bolt"></i><span>Bayar Sekarang</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: AUTOMATIC FULFILLMENT LIVE PIPELINE -->
+    <div id="fulfillment-modal" class="hidden fixed inset-0 z-[80] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-md w-full p-6 sm:p-8 border border-cyan-500/40 shadow-2xl space-y-6">
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 mx-auto rounded-2xl bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center text-cyan-400 text-2xl">
+                    <i class="fa-solid fa-microchip animate-pulse"></i>
+                </div>
+                <h3 class="font-display text-xl font-bold text-white">Automatic Product Fulfillment</h3>
+                <p id="ff-modal-subtitle" class="text-xs text-slate-400 font-mono">Menghubungkan ke API Supplier...</p>
+            </div>
+
+            <div class="space-y-3 text-xs" id="ff-steps-container">
+                <div id="ff-step-1" class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-3 text-slate-400">
+                    <i class="fa-solid fa-circle-notch fa-spin text-cyan-400"></i>
+                    <span>1. Verifikasi Pembayaran & Validasi Stok</span>
+                </div>
+                <div id="ff-step-2" class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-3 text-slate-500">
+                    <i class="fa-regular fa-circle"></i>
+                    <span>2. Mengirim Request ke API Supplier (Digiflazz/VIP)</span>
+                </div>
+                <div id="ff-step-3" class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-3 text-slate-500">
+                    <i class="fa-regular fa-circle"></i>
+                    <span>3. Memproses Top-Up ke Server Tujuan</span>
+                </div>
+                <div id="ff-step-4" class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-3 text-slate-500">
+                    <i class="fa-regular fa-circle"></i>
+                    <span>4. Pesanan Selesai & Serial Number (SN) Terbit</span>
+                </div>
+            </div>
+
+            <div id="ff-result-box" class="hidden p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/40 space-y-1.5 text-xs">
+                <div class="font-bold text-emerald-400 flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> Fulfillment Sukses!</div>
+                <div class="text-slate-300">Ref ID: <span id="ff-ref-id" class="font-mono text-white font-bold"></span></div>
+                <div class="text-slate-300">Serial Number (SN): <span id="ff-sn-code" class="font-mono text-cyan-300 font-bold"></span></div>
+            </div>
+
+            <button id="ff-close-btn" disabled onclick="closeFulfillmentModal()" class="w-full py-3 rounded-xl bg-slate-800 text-slate-500 font-bold text-sm transition">
+                Memproses Otomatis...
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: PAYMENT FAILED (SANDBOX) -->
+    <div id="payment-failed-modal" class="hidden fixed inset-0 z-[70] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-md w-full p-6 sm:p-8 border border-rose-500/50 text-center space-y-5">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-rose-500/15 border border-rose-500/40 flex items-center justify-center text-rose-400 text-3xl">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+            <div>
+                <h3 class="font-display text-2xl sm:text-3xl font-bold text-rose-400">Payment Failed</h3>
+                <p class="text-xs text-slate-400 mt-1">Pesanan dicatat dengan status <strong class="text-amber-300">Menunggu</strong> di Riwayat Pesanan.</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-rose-950/40 border border-rose-500/30 text-left space-y-1">
+                <div class="text-[11px] font-bold uppercase text-rose-300/80">Reason:</div>
+                <div class="font-mono text-sm sm:text-base font-bold text-white">There is no payment gateway yet</div>
+            </div>
+            <div class="pt-2 flex flex-col sm:flex-row gap-2.5">
+                <button type="button" onclick="closePaymentFailedModal()" class="flex-1 py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm">Tutup</button>
+                <button type="button" onclick="closePaymentFailedModal(); openStaffAccess();" class="py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold">Login Staf & Auto-Fulfill</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: STAFF LOGIN (RBAC) -->
+    <div id="staff-login-modal" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-md w-full p-6 sm:p-8 border border-indigo-500/30 shadow-2xl space-y-5">
+            <div class="flex items-center justify-between">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-xl">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <button onclick="closeStaffLoginModal()" class="w-9 h-9 rounded-xl bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div>
+                <h3 class="font-display text-2xl font-bold text-white">Login Staf (RBAC)</h3>
+                <p class="text-xs text-slate-400 mt-1">Pilih peran cepat untuk simulasi atau masukkan PIN staf Anda.</p>
+            </div>
+
+            <!-- Quick Role Presets -->
+            <div class="grid grid-cols-2 gap-2">
+                <button type="button" onclick="quickLoginRole('Owner')" class="p-2.5 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-left transition">
+                    <div class="text-xs font-bold text-indigo-300">Owner (Full)</div>
+                    <div class="text-[10px] text-slate-400 font-mono">PIN: admin123</div>
+                </button>
+                <button type="button" onclick="quickLoginRole('Admin')" class="p-2.5 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 text-left transition">
+                    <div class="text-xs font-bold text-cyan-300">Admin</div>
+                    <div class="text-[10px] text-slate-400 font-mono">PIN: admin456</div>
+                </button>
+                <button type="button" onclick="quickLoginRole('CS')" class="p-2.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-left transition">
+                    <div class="text-xs font-bold text-purple-300">Customer Service</div>
+                    <div class="text-[10px] text-slate-400 font-mono">PIN: cs123</div>
+                </button>
+                <button type="button" onclick="quickLoginRole('Operator')" class="p-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-left transition">
+                    <div class="text-xs font-bold text-amber-300">Operator</div>
+                    <div class="text-[10px] text-slate-400 font-mono">PIN: op123</div>
+                </button>
+            </div>
+
+            <form onsubmit="handleStaffLogin(event)" class="space-y-4">
+                <input type="password" id="staff-login-pin-input" required placeholder="Masukkan PIN Staf..." 
+                    class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 focus:border-indigo-400 focus:outline-none text-white text-center tracking-widest font-mono text-lg">
+                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm shadow-lg">Masuk ke Dashboard</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ORDER HISTORY, TRACKING & REVIEWS -->
+    <div id="order-history-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-3xl w-full border border-cyan-500/30 shadow-2xl overflow-hidden">
+            <div class="p-5 sm:p-6 border-b border-cyber-border flex items-center justify-between">
+                <div>
+                    <h3 class="font-display text-lg sm:text-xl font-bold text-white">Riwayat & Pelacakan Pesanan</h3>
+                    <p class="text-xs text-slate-400">Lacak status real-time, salin Serial Number (SN), ajukan pembatalan, atau beri ulasan.</p>
+                </div>
+                <button onclick="closeOrderHistoryModal()" class="w-9 h-9 rounded-xl bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="px-5 pt-4 flex flex-col sm:flex-row gap-2">
+                <input type="text" id="order-search-input" oninput="renderCustomerOrders()" placeholder="Cari nomor invoice (contoh: INV-123456) atau produk..." 
+                    class="flex-1 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:border-cyan-400 focus:outline-none">
+                <select id="order-status-filter" onchange="renderCustomerOrders()" class="px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white">
+                    <option value="ALL">Semua Status</option>
+                    <option value="Menunggu">Menunggu</option>
+                    <option value="Diproses">Diproses</option>
+                    <option value="Berhasil">Berhasil</option>
+                    <option value="Gagal">Gagal</option>
+                    <option value="Refund">Refund</option>
+                </select>
+            </div>
+            <div id="customer-orders-list" class="p-5 sm:p-6 max-h-[62vh] overflow-y-auto space-y-3.5"></div>
+        </div>
+    </div>
+
+    <!-- MODAL: SUBMIT PRODUCT RATING & REVIEW -->
+    <div id="review-modal" class="hidden fixed inset-0 z-[75] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-md w-full p-6 sm:p-7 border border-amber-500/30 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-display text-xl font-bold text-white"><i class="fa-solid fa-star text-amber-400 mr-2"></i>Ulasan & Rating Produk</h3>
+                <button onclick="closeReviewModal()" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p id="rev-product-title" class="text-xs text-cyan-400 font-semibold"></p>
+            <form onsubmit="submitProductReview(event)" class="space-y-4">
+                <input type="hidden" id="rev-order-id">
+                <input type="hidden" id="rev-product-id">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-2">Pilih Bintang</label>
+                    <div class="flex items-center gap-2 text-2xl" id="rev-stars-picker">
+                        <button type="button" onclick="setReviewRating(1)" class="rev-star text-amber-400"><i class="fa-solid fa-star"></i></button>
+                        <button type="button" onclick="setReviewRating(2)" class="rev-star text-amber-400"><i class="fa-solid fa-star"></i></button>
+                        <button type="button" onclick="setReviewRating(3)" class="rev-star text-amber-400"><i class="fa-solid fa-star"></i></button>
+                        <button type="button" onclick="setReviewRating(4)" class="rev-star text-amber-400"><i class="fa-solid fa-star"></i></button>
+                        <button type="button" onclick="setReviewRating(5)" class="rev-star text-amber-400"><i class="fa-solid fa-star"></i></button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Tampilan</label>
+                    <input type="text" id="rev-author" required placeholder="Contoh: PlayerPro" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Ulasan Pengalaman Top-Up</label>
+                    <textarea id="rev-comment" rows="3" required placeholder="Proses cepat banget, 3 detik langsung masuk!" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white"></textarea>
+                </div>
+                <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold text-sm shadow-lg">Kirim Ulasan</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: VIEW PRODUCT REVIEWS -->
+    <div id="product-reviews-view-modal" class="hidden fixed inset-0 z-[75] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-lg w-full p-6 border border-slate-700 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div>
+                    <h3 id="view-rev-title" class="font-display text-lg font-bold text-white">Ulasan Pembeli</h3>
+                    <p id="view-rev-summary" class="text-xs text-amber-400"></p>
+                </div>
+                <button onclick="document.getElementById('product-reviews-view-modal').classList.add('hidden')" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="view-rev-list" class="max-h-72 overflow-y-auto space-y-3 text-xs"></div>
+        </div>
+    </div>
+
+    <!-- MODAL: PUSAT BANTUAN & TIKET -->
+    <div id="help-ticket-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-xl w-full p-6 sm:p-8 border border-purple-500/30 shadow-2xl space-y-5 max-h-[85vh] overflow-y-auto">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 text-xl">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xl font-bold text-white">Pusat Bantuan & Tiket</h3>
+                        <p class="text-xs text-slate-400">Laporkan pesanan bermasalah atau lihat balasan resmi staf.</p>
+                    </div>
+                </div>
+                <button onclick="closeHelpTicketModal()" class="w-9 h-9 rounded-xl bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleCreateTicket(event)" class="space-y-3.5 p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Nama / No. WhatsApp *</label>
+                        <input type="text" id="ticket-name" required placeholder="Nama / 08xxx" class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Nomor Invoice</label>
+                        <input type="text" id="ticket-invoice" placeholder="INV-XXXXXX" class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white font-mono">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Detail Kendala *</label>
+                    <textarea id="ticket-message" rows="2" required placeholder="Jelaskan kendala transaksi Anda..." class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white"></textarea>
+                </div>
+                <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-sm shadow-lg">Kirim Tiket Bantuan</button>
+            </form>
+
+            <div class="space-y-2">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Riwayat Tiket & Balasan Staf</h4>
+                <div id="customer-tickets-list" class="space-y-2.5 max-h-48 overflow-y-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: LEGAL (SYARAT LAYANAN & PRIVASI) -->
+    <div id="legal-modal" class="hidden fixed inset-0 z-[75] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-xl w-full p-6 sm:p-8 border border-slate-700 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 id="legal-modal-title" class="font-display text-xl font-bold text-white">Syarat Layanan</h3>
+                <button onclick="document.getElementById('legal-modal').classList.add('hidden')" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="legal-modal-body" class="text-xs sm:text-sm text-slate-300 space-y-3 leading-relaxed max-h-80 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'zidzzz_enterprise_v5_data';
+        const STAFF_SESSION_KEY = 'zidzzz_staff_session_v5';
+
+        // RBAC Permission Matrix
+        const ROLE_PERMISSIONS = {
+            Owner: ['stats', 'orders', 'products', 'coupons', 'tickets', 'roles', 'settings'],
+            Admin: ['stats', 'orders', 'products', 'coupons', 'tickets'],
+            CS: ['orders', 'tickets'],
+            Operator: ['orders']
+        };
+
+        const ROLE_PINS = {
+            Admin: 'admin456',
+            CS: 'cs123',
+            Operator: 'op123'
+        };
+
+        function escapeHtml(str) {
+            return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+        }
+
+        function toLocalDateTimeInput(dateObj) {
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${dateObj.getFullYear()}-${pad(dateObj.getMonth() + 1)}-${pad(dateObj.getDate())}T${pad(dateObj.getHours())}:${pad(dateObj.getMinutes())}`;
+        }
+
+        function getDefaultSeedData() {
+            const now = new Date();
+            const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+            return {
+                settings: {
+                    storeName: 'Zidzzz Store',
+                    announcement: 'Enterprise Promo! Gunakan kode kupon ZIDZZZ20 (Diskon 20%) atau HEMAT5K (Potongan Rp 5.000)!',
+                    maintenanceMode: false,
+                    maintenanceMessage: 'Sistem sedang melakukan pemeliharaan rutin & sinkronisasi API supplier.',
+                    staffPin: 'admin123',
+                    adminWhatsapp: '6281299887766'
+                },
+                products: [
+                    { id: 'prod-1', name: '86 Diamonds MLBB', category: 'Mobile Legends', price: 22000, stock: 45, badge: 'Terlaris', icon: 'fa-gem', imageUrl: '', desc: '78 + 8 Bonus Diamonds. API Instant Fulfillment.', fieldType: 'game_id_zone' },
+                    { id: 'prod-2', name: 'Weekly Diamond Pass', category: 'Mobile Legends', price: 28500, stock: 30, badge: 'Hemat', icon: 'fa-crown', imageUrl: '', desc: 'Total 220 Diamonds selama 7 hari aktif.', fieldType: 'game_id_zone' },
+                    { id: 'prod-3', name: '140 Diamonds Free Fire', category: 'Free Fire', price: 19500, stock: 60, badge: 'Instan', icon: 'fa-fire', imageUrl: '', desc: 'Top-up FF legal 100% via server supplier.', fieldType: 'player_id' },
+                    { id: 'prod-4', name: '475 Valorant Points', category: 'Valorant', price: 56000, stock: 20, badge: 'Region ID', icon: 'fa-crosshairs', imageUrl: '', desc: 'Khusus akun Valorant region Indonesia.', fieldType: 'riot_id' },
+                    { id: 'prod-5', name: '60 UC PUBG Mobile', category: 'PUBG Mobile', price: 14500, stock: 50, badge: 'Global/ID', icon: 'fa-parachute-box', imageUrl: '', desc: 'UC masuk otomatis dalam hitungan detik.', fieldType: 'player_id' },
+                    { id: 'prod-6', name: '400 Robux Instant', category: 'Roblox', price: 65000, stock: 25, badge: 'Populer', icon: 'fa-cube', imageUrl: '', desc: 'Top-up Robux legal via Username Roblox.', fieldType: 'roblox_user' },
+                    { id: 'prod-7', name: 'Saldo DANA Rp 50.000', category: 'Pulsa & E-Wallet', price: 51500, stock: 25, badge: '24 Jam', icon: 'fa-wallet', imageUrl: '', desc: 'Transfer saldo DANA otomatis tanpa admin.', fieldType: 'phone' },
+                    { id: 'prod-8', name: 'YouTube Premium 1 Bulan', category: 'Aplikasi Premium', price: 15000, stock: 12, badge: 'Garansi', icon: 'fa-play', imageUrl: '', desc: 'Bebas iklan + YouTube Music bergaransi.', fieldType: 'email' }
+                ],
+                coupons: [
+                    { id: 'coup-1', code: 'ZIDZZZ20', type: 'percent', value: 20, usageLimit: 100, usedCount: 12, startDate: toLocalDateTimeInput(yesterday), endDate: toLocalDateTimeInput(nextWeek), active: true },
+                    { id: 'coup-2', code: 'HEMAT5K', type: 'fixed', value: 5000, usageLimit: 50, usedCount: 5, startDate: toLocalDateTimeInput(yesterday), endDate: toLocalDateTimeInput(nextWeek), active: true }
+                ],
+                payments: [
+                    { id: 'pay-1', name: 'QRIS All Payment', type: 'QRIS', accountNumber: 'QRIS ZIDZZZ STORE', accountHolder: 'Zidzzz Digital Store', active: true },
+                    { id: 'pay-2', name: 'DANA Instan', type: 'E-Wallet', accountNumber: '0812-9988-7766', accountHolder: 'Zidzzz Official', active: true },
+                    { id: 'pay-3', name: 'BCA Virtual Account', type: 'Bank Transfer', accountNumber: '88019928371', accountHolder: 'PT Zidzzz Digital', active: true }
+                ],
+                orders: [],
+                tickets: [],
+                reviews: [
+                    { id: 'rev-1', productId: 'prod-1', author: 'RakaGaming', rating: 5, comment: 'Gila cepet banget, 3 detik diamond langsung masuk!', createdAt: new Date().toISOString() },
+                    { id: 'rev-2', productId: 'prod-6', author: 'NadiaRbx', rating: 5, comment: 'Robux aman dan terpercaya, dapet SN juga.', createdAt: new Date().toISOString() }
+                ],
+                notifications: [
+                    { id: 'notif-1', title: 'Selamat Datang di Zidzzz Store', message: 'Gunakan kode ZIDZZZ20 untuk diskon 20% transaksi pertama Anda.', read: false, createdAt: new Date().toISOString() }
+                ],
+                auditLogs: [
+                    { id: 'log-1', role: 'System', action: 'Inisialisasi Zidzzz Store Enterprise v5', time: new Date().toISOString() }
+                ]
+            };
+        }
+
+        let appData = loadAppData();
+        let currentStaffRole = localStorage.getItem(STAFF_SESSION_KEY) || null;
+        let selectedGameCategory = null;
+        let currentCheckoutProduct = null;
+        let appliedCoupon = null;
+        let selectedPaymentId = null;
+        let selectedReviewRating = 5;
+
+        const GAME_CATALOG_META = {
+            'Mobile Legends': { publisher: 'Moonton • API Auto Fulfill', icon: 'fa-shield-halved', gradient: 'from-blue-600/30 via-indigo-600/20 to-cyan-500/20', accent: 'text-cyan-400', guide: 'Masukkan User ID & Zone ID dari profil MLBB Anda.' },
+            'Free Fire': { publisher: 'Garena • API Auto Fulfill', icon: 'fa-fire-flame-curved', gradient: 'from-orange-600/30 via-amber-600/20 to-rose-500/20', accent: 'text-amber-400', guide: 'Masukkan Player ID Free Fire Anda.' },
+            'Valorant': { publisher: 'Riot Games • Region ID', icon: 'fa-crosshairs', gradient: 'from-rose-600/30 via-red-600/20 to-slate-900', accent: 'text-rose-400', guide: 'Masukkan Riot ID beserta Tagline.' },
+            'PUBG Mobile': { publisher: 'Tencent • Global & ID', icon: 'fa-parachute-box', gradient: 'from-yellow-600/30 via-amber-600/20 to-stone-900', accent: 'text-yellow-400', guide: 'Masukkan Character ID PUBG Mobile Anda.' },
+            'Roblox': { publisher: 'Roblox Corp • Instant API', icon: 'fa-cube', gradient: 'from-slate-600/30 via-zinc-600/20 to-cyan-500/20', accent: 'text-cyan-300', guide: 'Masukkan Username Roblox Anda dengan benar.' },
+            'Pulsa & E-Wallet': { publisher: 'All Operator • 24 Jam', icon: 'fa-wallet', gradient: 'from-emerald-600/30 via-teal-600/20 to-cyan-500/20', accent: 'text-emerald-400', guide: 'Masukkan nomor HP tujuan pengisian.' },
+            'Aplikasi Premium': { publisher: 'Resmi & Bergaransi', icon: 'fa-crown', gradient: 'from-fuchsia-600/30 via-purple-600/20 to-indigo-500/20', accent: 'text-fuchsia-400', guide: 'Masukkan Email aktif untuk pengiriman akun/invite.' }
+        };
+
+        function getGameMeta(categoryName) {
+            return GAME_CATALOG_META[categoryName] || { publisher: 'Digital Goods • Instan', icon: 'fa-gamepad', gradient: 'from-indigo-600/30 via-purple-600/20 to-cyan-500/20', accent: 'text-indigo-400', guide: 'Pilih nominal item di bawah ini.' };
+        }
+
+        function loadAppData() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) {
+                    const seed = getDefaultSeedData();
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(seed));
+                    return seed;
+                }
+                return JSON.parse(raw);
+            } catch (e) {
+                return getDefaultSeedData();
+            }
+        }
+
+        function saveAppData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+        }
+
+        function addAuditLog(action) {
+            appData.auditLogs.unshift({
+                id: 'log-' + Date.now(),
+                role: currentStaffRole || 'Guest',
+                action,
+                time: new Date().toISOString()
+            });
+            if (appData.auditLogs.length > 60) appData.auditLogs.pop();
+            saveAppData();
+        }
+
+        function pushNotification(title, message) {
+            appData.notifications.unshift({
+                id: 'notif-' + Date.now(),
+                title,
+                message,
+                read: false,
+                createdAt: new Date().toISOString()
+            });
+            if (appData.notifications.length > 30) appData.notifications.pop();
+            saveAppData();
+            renderNotifications();
+        }
+
+        function formatRupiah(num) {
+            return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
+        }
+
+        function formatDateTime(dtStr) {
+            if (!dtStr) return '-';
+            const d = new Date(dtStr);
+            return isNaN(d.getTime()) ? dtStr : d.toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const styles = {
+                success: 'bg-slate-900/95 border-emerald-500/50 text-emerald-300',
+                error: 'bg-slate-900/95 border-rose-500/50 text-rose-300',
+                info: 'bg-slate-900/95 border-cyan-500/50 text-cyan-300',
+                warning: 'bg-slate-900/95 border-amber-500/50 text-amber-300'
+            };
+            toast.className = `pointer-events-auto p-4 rounded-2xl border shadow-2xl backdrop-blur-md text-xs sm:text-sm font-medium transition-all duration-300 ${styles[type] || styles.info}`;
+            toast.innerHTML = message;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3400);
+        }
+
+        function getCouponStatus(coupon) {
+            if (!coupon.active) return { status: 'nonaktif', label: 'Nonaktif', badgeClass: 'bg-slate-800 text-slate-400 border-slate-700' };
+            if ((coupon.usedCount || 0) >= (coupon.usageLimit || 999999)) return { status: 'exhausted', label: 'Kuota Habis', badgeClass: 'bg-rose-500/15 text-rose-300 border-rose-500/30' };
+            const now = new Date();
+            if (now < new Date(coupon.startDate)) return { status: 'scheduled', label: 'Terjadwal', badgeClass: 'bg-amber-500/15 text-amber-300 border-amber-500/30' };
+            if (now > new Date(coupon.endDate)) return { status: 'expired', label: 'Kadaluarsa', badgeClass: 'bg-rose-500/15 text-rose-300 border-rose-500/30' };
+            return { status: 'active', label: 'Aktif', badgeClass: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' };
+        }
+
+        function getProductRatingStats(productId) {
+            const revs = (appData.reviews || []).filter(r => r.productId === productId);
+            if (revs.length === 0) return { avg: 5.0, count: 0 };
+            const sum = revs.reduce((acc, r) => acc + Number(r.rating || 5), 0);
+            return { avg: (sum / revs.length).toFixed(1), count: revs.length };
+        }
+
+        function syncStoreBrandingAndMaintenance() {
+            const { storeName, announcement, maintenanceMode, maintenanceMessage } = appData.settings;
+            const parts = storeName.split(' ');
+            document.getElementById('nav-store-name').innerHTML = `${escapeHtml(parts[0] || 'Zidzzz')} <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400">${escapeHtml(parts.slice(1).join(' ') || 'Store')}</span>`;
+            document.getElementById('maint-store-title').textContent = `${storeName} Sedang Maintenance`;
+            document.getElementById('announcement-text').textContent = announcement || 'Selamat datang di Zidzzz Store!';
+            document.getElementById('maint-message-display').textContent = maintenanceMessage;
+            document.getElementById('nav-order-badge').textContent = appData.orders.length;
+
+            const maintScreen = document.getElementById('maintenance-screen');
+            const isDashboardOpen = !document.getElementById('view-staff-dashboard').classList.contains('hidden');
+            maintScreen.classList.toggle('hidden', !maintenanceMode || isDashboardOpen);
+            document.getElementById('staff-maint-badge').classList.toggle('hidden', !maintenanceMode);
+
+            const isLoggedIn = Boolean(currentStaffRole);
+            const pill = document.getElementById('nav-staff-session-pill');
+            pill.classList.toggle('hidden', !isLoggedIn);
+            if (isLoggedIn) {
+                pill.classList.add('inline-flex');
+                document.getElementById('nav-role-display').textContent = currentStaffRole;
+                document.getElementById('staff-role-badge').textContent = `Role: ${currentStaffRole}`;
+            }
+            document.getElementById('nav-btn-logout-staff').classList.toggle('hidden', !isLoggedIn);
+            document.getElementById('nav-btn-staff-label').textContent = isLoggedIn ? 'Panel Staf' : 'Admin Dashboard';
+            renderNotifications();
+        }
+
+        function renderNotifications() {
+            const notifs = appData.notifications || [];
+            const unread = notifs.filter(n => !n.read).length;
+            document.getElementById('nav-notif-dot').classList.toggle('hidden', unread === 0);
+            const list = document.getElementById('notif-list');
+            list.innerHTML = notifs.length === 0
+                ? `<div class="p-4 text-center text-slate-400">Belum ada notifikasi.</div>`
+                : notifs.map(n => `
+                    <div class="p-3.5 ${n.read ? 'opacity-65' : 'bg-indigo-500/5'}">
+                        <div class="font-bold text-white flex items-center justify-between">
+                            <span>${escapeHtml(n.title)}</span>
+                            ${!n.read ? '<span class="w-2 h-2 rounded-full bg-cyan-400"></span>' : ''}
+                        </div>
+                        <p class="text-slate-300 mt-0.5">${escapeHtml(n.message)}</p>
+                        <div class="text-[10px] text-slate-500 mt-1">${formatDateTime(n.createdAt)}</div>
+                    </div>
+                `).join('');
+        }
+
+        function toggleNotificationDrawer() {
+            document.getElementById('notif-dropdown').classList.toggle('hidden');
+        }
+
+        function markAllNotifsRead() {
+            appData.notifications.forEach(n => n.read = true);
+            saveAppData();
+            renderNotifications();
+        }
+
+        function switchView(viewName) {
+            const storeView = document.getElementById('view-storefront');
+            const staffView = document.getElementById('view-staff-dashboard');
+            if (viewName === 'staff') {
+                if (!currentStaffRole) { openStaffAccess(); return; }
+                storeView.classList.add('hidden');
+                staffView.classList.remove('hidden');
+                applyRbacPermissions();
+            } else {
+                staffView.classList.add('hidden');
+                storeView.classList.remove('hidden');
+                selectedGameCategory = null;
+                renderStorefront();
+            }
+            syncStoreBrandingAndMaintenance();
+        }
+
+        function renderStorefront() {
+            syncStoreBrandingAndMaintenance();
+            const activeCoupons = appData.coupons.filter(c => getCouponStatus(c).status === 'active');
+            document.getElementById('hero-active-coupons').innerHTML = activeCoupons.map(c => {
+                const label = c.type === 'fixed' ? `Potongan ${formatRupiah(c.value)}` : `Diskon ${c.value}%`;
+                return `
+                    <button onclick="copyCouponCode('${escapeHtml(c.code)}')" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/40 text-purple-200 text-xs font-semibold transition">
+                        <i class="fa-solid fa-ticket text-purple-400"></i>
+                        <span><strong class="font-mono text-white">${escapeHtml(c.code)}</strong> • ${label}</span>
+                    </button>
+                `;
+            }).join('');
+
+            if (selectedGameCategory) {
+                document.getElementById('step-game-selection').classList.add('hidden');
+                document.getElementById('step-product-selection').classList.remove('hidden');
+                renderProductListForGame();
+            } else {
+                document.getElementById('step-product-selection').classList.add('hidden');
+                document.getElementById('step-game-selection').classList.remove('hidden');
+                renderGameSelection();
+            }
+        }
+
+        function renderGameSelection() {
+            const query = (document.getElementById('game-search-input')?.value || '').toLowerCase().trim();
+            const categoryMap = new Map();
+            appData.products.forEach(prod => {
+                if (!categoryMap.has(prod.category)) categoryMap.set(prod.category, []);
+                categoryMap.get(prod.category).push(prod);
+            });
+
+            const gameList = Array.from(categoryMap.entries()).map(([category, items]) => {
+                const meta = getGameMeta(category);
+                const totalStock = items.reduce((sum, i) => sum + Number(i.stock || 0), 0);
+                const minPrice = Math.min(...items.map(i => Number(i.price || 0)));
+                return { category, items, meta, totalStock, minPrice };
+            }).filter(g => g.category.toLowerCase().includes(query));
+
+            const gameGrid = document.getElementById('game-grid');
+            document.getElementById('empty-game-state').classList.toggle('hidden', gameList.length > 0);
+            gameGrid.innerHTML = gameList.map(game => `
+                <div onclick="selectGame('${escapeHtml(game.category).replace(/'/g, "\\'")}')" class="group cursor-pointer glass-panel rounded-3xl p-5 border border-cyber-border neon-border-hover transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br ${game.meta.gradient} opacity-40 group-hover:opacity-75 transition pointer-events-none"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-start justify-between gap-3 mb-4">
+                            <div class="w-14 h-14 rounded-2xl bg-slate-950/80 border border-slate-700/80 flex items-center justify-center">
+                                <i class="fa-solid ${game.meta.icon} text-2xl ${game.meta.accent}"></i>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-950/75 text-slate-200 border border-slate-700/80">${game.items.length} Item</span>
+                        </div>
+                        <div class="text-[11px] font-semibold text-slate-300/90 mb-1">${game.meta.publisher}</div>
+                        <h4 class="font-display text-xl font-bold text-white group-hover:text-cyan-300 transition mb-2">${escapeHtml(game.category)}</h4>
+                        <p class="text-xs text-slate-400">Mulai dari <span class="text-white font-bold">${formatRupiah(game.minPrice)}</span></p>
+                    </div>
+                    <div class="relative z-10 pt-4 mt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <span class="text-[11px] font-semibold ${game.totalStock > 0 ? 'text-emerald-400' : 'text-rose-400'}">
+                            ${game.totalStock > 0 ? `Stok: ${game.totalStock}` : 'Stok Habis'}
+                        </span>
+                        <span class="text-xs font-bold text-cyan-400">Pilih Nominal →</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectGame(categoryName) {
+            selectedGameCategory = categoryName;
+            document.getElementById('store-search-input').value = '';
+            renderStorefront();
+        }
+
+        function backToGameSelection() {
+            selectedGameCategory = null;
+            renderStorefront();
+        }
+
+        function renderProductListForGame() {
+            if (!selectedGameCategory) return;
+            const meta = getGameMeta(selectedGameCategory);
+            document.getElementById('breadcrumb-game-name').textContent = selectedGameCategory;
+            document.getElementById('selected-game-title').textContent = selectedGameCategory;
+            document.getElementById('selected-game-publisher').textContent = meta.publisher;
+            document.getElementById('selected-game-guide').textContent = meta.guide;
+            document.getElementById('selected-game-icon').innerHTML = `<i class="fa-solid ${meta.icon} ${meta.accent}"></i>`;
+
+            const query = (document.getElementById('store-search-input').value || '').toLowerCase().trim();
+            const sortBy = document.getElementById('store-sort-select')?.value || 'default';
+            let filtered = appData.products.filter(p => p.category === selectedGameCategory && p.name.toLowerCase().includes(query));
+
+            if (sortBy === 'price-asc') filtered.sort((a, b) => a.price - b.price);
+            else if (sortBy === 'price-desc') filtered.sort((a, b) => b.price - a.price);
+            else if (sortBy === 'rating-desc') filtered.sort((a, b) => getProductRatingStats(b.id).avg - getProductRatingStats(a.id).avg);
+
+            document.getElementById('product-count-label').textContent = `Menampilkan ${filtered.length} item`;
+            document.getElementById('empty-store-state').classList.toggle('hidden', filtered.length > 0);
+            document.getElementById('product-grid').innerHTML = filtered.map(prod => {
+                const isOutOfStock = prod.stock <= 0;
+                const rating = getProductRatingStats(prod.id);
+                const visual = prod.imageUrl
+                    ? `<img src="${escapeHtml(prod.imageUrl)}" alt="${escapeHtml(prod.name)}" onerror="this.style.display='none'" class="w-12 h-12 rounded-xl object-cover">`
+                    : `<i class="fa-solid ${escapeHtml(prod.icon || 'fa-gem')} text-2xl text-cyan-400"></i>`;
+
+                return `
+                    <div class="glass-panel rounded-2xl p-5 border border-cyber-border neon-border-hover transition-all flex flex-col justify-between ${isOutOfStock ? 'opacity-70' : ''}">
+                        <div>
+                            <div class="flex items-start justify-between gap-2 mb-3">
+                                <div class="p-3 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center">${visual}</div>
+                                <div class="flex flex-col items-end gap-1">
+                                    ${prod.badge ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">${escapeHtml(prod.badge)}</span>` : ''}
+                                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${isOutOfStock ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/15 text-emerald-400'}">
+                                        ${isOutOfStock ? 'Stok Habis' : `Stok: ${prod.stock}`}
+                                    </span>
+                                </div>
+                            </div>
+                            <h4 class="font-display text-lg font-bold text-white mb-1">${escapeHtml(prod.name)}</h4>
+                            <button onclick="openProductReviewsView('${prod.id}')" class="inline-flex items-center gap-1 text-xs text-amber-400 hover:underline mb-2">
+                                <i class="fa-solid fa-star"></i> <strong>${rating.avg}</strong> <span class="text-slate-400">(${rating.count} ulasan)</span>
+                            </button>
+                            <p class="text-xs text-slate-400 mb-4 line-clamp-2">${escapeHtml(prod.desc || '')}</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                            <div class="font-display text-lg font-bold text-white">${formatRupiah(prod.price)}</div>
+                            <button onclick="openCheckoutModal('${prod.id}')" ${isOutOfStock ? 'disabled' : ''} class="px-4 py-2 rounded-xl text-xs font-bold ${isOutOfStock ? 'bg-slate-800 text-slate-500' : 'bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white shadow-md'}">
+                                ${isOutOfStock ? 'Habis' : 'Beli'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function copyCouponCode(code) {
+            const el = document.createElement('textarea');
+            el.value = code;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            showToast(`Kode kupon <b>${escapeHtml(code)}</b> disalin!`, 'info');
+        }
+
+        function resolveProductFieldType(product) {
+            if (product?.fieldType && product.fieldType !== 'auto') return product.fieldType;
+            const c = String(product?.category || '').toLowerCase();
+            if (c.includes('mobile legends')) return 'game_id_zone';
+            if (c.includes('valorant')) return 'riot_id';
+            if (c.includes('roblox')) return 'roblox_user';
+            if (c.includes('wallet') || c.includes('pulsa')) return 'phone';
+            if (c.includes('premium')) return 'email';
+            return 'player_id';
+        }
+
+        function renderCustomerFields(product) {
+            const wrap = document.getElementById('co-customer-fields');
+            const type = resolveProductFieldType(product);
+            const inp = (id, label, ph, wide = false, t = 'text') => `
+                <div class="${wide ? 'sm:col-span-2' : ''}">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">${label} *</label>
+                    <input type="${t}" id="${id}" placeholder="${ph}" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 focus:border-cyan-400 focus:outline-none text-sm text-white">
+                </div>`;
+            if (type === 'game_id_zone') wrap.innerHTML = inp('co-user-id', 'User ID MLBB', '12345678') + inp('co-zone-id', 'Zone ID', '1234');
+            else if (type === 'riot_id') wrap.innerHTML = inp('co-user-id', 'Riot ID', 'PlayerName') + inp('co-zone-id', 'Tagline', '#ID1');
+            else if (type === 'roblox_user') wrap.innerHTML = inp('co-user-id', 'Username Roblox', 'Contoh: BuilderMan_ID', true);
+            else if (type === 'phone') wrap.innerHTML = inp('co-user-id', 'Nomor HP Tujuan', '08xxxxxxxxxx', true, 'tel');
+            else if (type === 'email') wrap.innerHTML = inp('co-user-id', 'Email Tujuan', 'nama@email.com', true, 'email');
+            else if (type === 'none') wrap.innerHTML = '<p class="sm:col-span-2 text-xs text-slate-400">Produk voucher kode instan (tidak membutuhkan ID tujuan).</p>';
+            else wrap.innerHTML = inp('co-user-id', 'Player / Character ID', 'Masukkan ID akun game', true);
+        }
+
+        function openCheckoutModal(productId) {
+            const product = appData.products.find(p => p.id === productId);
+            if (!product || product.stock <= 0) return;
+
+            currentCheckoutProduct = product;
+            appliedCoupon = null;
+            renderCustomerFields(product);
+            document.getElementById('co-qty').value = 1;
+            document.getElementById('co-coupon-input').value = '';
+            document.getElementById('co-coupon-feedback').classList.add('hidden');
+            document.getElementById('co-prod-category').textContent = product.category;
+            document.getElementById('co-prod-name').textContent = product.name;
+            document.getElementById('co-prod-stock-info').textContent = `Stok tersedia: ${product.stock} unit`;
+
+            document.getElementById('co-role-indicator').innerHTML = currentStaffRole
+                ? `<span class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold"><i class="fa-solid fa-bolt mr-1"></i>Staf (${currentStaffRole}): Auto-Fulfill</span>`
+                : `<span class="px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30 font-semibold">Sandbox Mode</span>`;
+
+            const activePayments = appData.payments.filter(pay => pay.active);
+            const payContainer = document.getElementById('co-payment-methods');
+            selectedPaymentId = activePayments[0]?.id || null;
+            payContainer.innerHTML = activePayments.map(pay => `
+                <button type="button" onclick="selectCheckoutPayment('${pay.id}')" id="co-pay-btn-${pay.id}"
+                    class="co-pay-option p-3 rounded-xl border text-left transition flex items-center justify-between ${pay.id === selectedPaymentId ? 'bg-cyan-500/15 border-cyan-400 text-white' : 'bg-slate-900/90 border-slate-800 text-slate-300'}">
+                    <div>
+                        <div class="text-xs font-bold">${escapeHtml(pay.name)}</div>
+                        <div class="text-[11px] text-slate-400">${escapeHtml(pay.type)}</div>
+                    </div>
+                </button>
+            `).join('');
+            updatePaymentDetailBox();
+            updateCheckoutSummary();
+            document.getElementById('checkout-modal').classList.remove('hidden');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+            currentCheckoutProduct = null;
+        }
+
+        function changeCheckoutQty(delta) {
+            if (!currentCheckoutProduct) return;
+            const input = document.getElementById('co-qty');
+            input.value = Math.min(currentCheckoutProduct.stock, Math.max(1, parseInt(input.value || 1) + delta));
+            updateCheckoutSummary();
+        }
+
+        function applyCouponInCheckout() {
+            const codeInput = document.getElementById('co-coupon-input').value.trim().toUpperCase();
+            const feedback = document.getElementById('co-coupon-feedback');
+            feedback.classList.remove('hidden', 'text-emerald-400', 'text-rose-400');
+
+            const found = appData.coupons.find(c => c.code.toUpperCase() === codeInput);
+            if (!found || getCouponStatus(found).status !== 'active') {
+                appliedCoupon = null;
+                feedback.textContent = found && getCouponStatus(found).status === 'exhausted'
+                    ? 'Kuota penggunaan voucher ini sudah habis.'
+                    : 'Kupon tidak valid atau sudah kadaluarsa.';
+                feedback.classList.add('text-rose-400');
+            } else {
+                appliedCoupon = found;
+                const desc = found.type === 'fixed' ? `Potongan ${formatRupiah(found.value)}` : `Diskon ${found.value}%`;
+                feedback.textContent = `${desc} berhasil diterapkan!`;
+                feedback.classList.add('text-emerald-400');
+            }
+            updateCheckoutSummary();
+        }
+
+        function selectCheckoutPayment(payId) {
+            selectedPaymentId = payId;
+            document.querySelectorAll('.co-pay-option').forEach(btn => {
+                btn.className = 'co-pay-option p-3 rounded-xl border text-left transition flex items-center justify-between bg-slate-900/90 border-slate-800 text-slate-300';
+            });
+            const activeBtn = document.getElementById(`co-pay-btn-${payId}`);
+            if (activeBtn) activeBtn.className = 'co-pay-option p-3 rounded-xl border text-left transition flex items-center justify-between bg-cyan-500/15 border-cyan-400 text-white';
+            updatePaymentDetailBox();
+        }
+
+        function updatePaymentDetailBox() {
+            const box = document.getElementById('co-payment-detail-box');
+            const pay = appData.payments.find(p => p.id === selectedPaymentId);
+            if (!pay) { box.classList.add('hidden'); return; }
+            box.classList.remove('hidden');
+            document.getElementById('co-pay-selected-name').textContent = pay.name;
+            document.getElementById('co-pay-account-number').textContent = pay.accountNumber;
+            document.getElementById('co-pay-account-holder').textContent = `a.n ${pay.accountHolder}`;
+        }
+
+        function copyPaymentAccount() {
+            copyCouponCode(document.getElementById('co-pay-account-number').textContent);
+        }
+
+        function calculateDiscount(subtotal, coupon) {
+            if (!coupon || getCouponStatus(coupon).status !== 'active') return 0;
+            if (coupon.type === 'fixed') return Math.min(subtotal, Number(coupon.value || 0));
+            return Math.round(subtotal * (Number(coupon.value || 0) / 100));
+        }
+
+        function updateCheckoutSummary() {
+            if (!currentCheckoutProduct) return;
+            const qty = Math.min(currentCheckoutProduct.stock, Math.max(1, parseInt(document.getElementById('co-qty').value || 1)));
+            document.getElementById('co-qty').value = qty;
+            const subtotal = currentCheckoutProduct.price * qty;
+            const discountAmount = calculateDiscount(subtotal, appliedCoupon);
+
+            document.getElementById('co-summary-qty').textContent = qty;
+            document.getElementById('co-summary-subtotal').textContent = formatRupiah(subtotal);
+            document.getElementById('co-discount-row').classList.toggle('hidden', discountAmount === 0);
+            if (discountAmount > 0) {
+                document.getElementById('co-summary-disc-label').textContent = `Voucher (${appliedCoupon.code})`;
+                document.getElementById('co-summary-discount').textContent = `- ${formatRupiah(discountAmount)}`;
+            }
+            document.getElementById('co-summary-total').textContent = formatRupiah(Math.max(0, subtotal - discountAmount));
+        }
+
+        function confirmCheckoutOrder() {
+            if (!currentCheckoutProduct) return;
+            const userId = document.getElementById('co-user-id')?.value.trim() || '';
+            const zoneId = document.getElementById('co-zone-id')?.value.trim() || '';
+            const qty = parseInt(document.getElementById('co-qty').value || 1);
+            const fieldType = resolveProductFieldType(currentCheckoutProduct);
+
+            if (fieldType !== 'none' && !userId) {
+                showToast('Harap isi data tujuan pengiriman terlebih dahulu!', 'error');
+                return;
+            }
+
+            const prodIndex = appData.products.findIndex(p => p.id === currentCheckoutProduct.id);
+            const paymentObj = appData.payments.find(p => p.id === selectedPaymentId);
+            const subtotal = appData.products[prodIndex].price * qty;
+            const discountAmount = calculateDiscount(subtotal, appliedCoupon);
+            const finalTotal = Math.max(0, subtotal - discountAmount);
+            const targetAcc = zoneId ? `${userId} (${zoneId})` : (userId || 'Voucher-Direct');
+            const invoiceId = 'INV-' + Date.now().toString().slice(-6);
+
+            if (appliedCoupon && discountAmount > 0) {
+                const cIdx = appData.coupons.findIndex(c => c.id === appliedCoupon.id);
+                if (cIdx !== -1) appData.coupons[cIdx].usedCount = (appData.coupons[cIdx].usedCount || 0) + 1;
+            }
+
+            // Non-staff Sandbox Mode -> Create Menunggu order & show Payment Failed modal
+            if (!currentStaffRole) {
+                appData.orders.unshift({
+                    id: invoiceId,
+                    createdAt: new Date().toISOString(),
+                    productId: appData.products[prodIndex].id,
+                    productName: appData.products[prodIndex].name,
+                    category: appData.products[prodIndex].category,
+                    qty, targetAccount: targetAcc,
+                    paymentMethod: paymentObj?.name || 'QRIS',
+                    totalPaid: finalTotal,
+                    status: 'Menunggu',
+                    stockDeducted: false,
+                    supplierRef: '-',
+                    serialNumber: '-',
+                    reviewed: false
+                });
+                saveAppData();
+                pushNotification(`Pesanan Dibuat (${invoiceId})`, `Menunggu verifikasi pembayaran untuk ${appData.products[prodIndex].name}.`);
+                syncStoreBrandingAndMaintenance();
+                closeCheckoutModal();
+                document.getElementById('payment-failed-modal').classList.remove('hidden');
+                return;
+            }
+
+            // Staff Mode -> Run Live 4-Stage Automatic Product Fulfillment Pipeline!
+            appData.products[prodIndex].stock -= qty;
+            const newOrder = {
+                id: invoiceId,
+                createdAt: new Date().toISOString(),
+                productId: appData.products[prodIndex].id,
+                productName: appData.products[prodIndex].name,
+                category: appData.products[prodIndex].category,
+                qty, targetAccount: targetAcc,
+                paymentMethod: paymentObj?.name || 'QRIS',
+                totalPaid: finalTotal,
+                status: 'Diproses',
+                stockDeducted: true,
+                supplierRef: '-',
+                serialNumber: '-',
+                reviewed: false
+            };
+            appData.orders.unshift(newOrder);
+            saveAppData();
+            closeCheckoutModal();
+            runAutomaticFulfillmentPipeline(invoiceId);
+        }
+
+        function runAutomaticFulfillmentPipeline(orderId) {
+            const ord = appData.orders.find(o => o.id === orderId);
+            if (!ord) return;
+
+            const modal = document.getElementById('fulfillment-modal');
+            const resultBox = document.getElementById('ff-result-box');
+            const closeBtn = document.getElementById('ff-close-btn');
+            document.getElementById('ff-modal-subtitle').textContent = `Invoice: ${ord.id} • ${ord.productName}`;
+            resultBox.classList.add('hidden');
+            closeBtn.disabled = true;
+            closeBtn.className = 'w-full py-3 rounded-xl bg-slate-800 text-slate-500 font-bold text-sm transition';
+            closeBtn.textContent = 'Menjalankan Pipeline API...';
+
+            const steps = [
+                { el: document.getElementById('ff-step-1'), text: '1. Pembayaran Terverifikasi & Stok Terkunci' },
+                { el: document.getElementById('ff-step-2'), text: '2. Mengirim Request ke API Supplier (Digiflazz/VIP)' },
+                { el: document.getElementById('ff-step-3'), text: '3. Memproses Top-Up ke Server Tujuan' },
+                { el: document.getElementById('ff-step-4'), text: '4. Pesanan Selesai (Berhasil) + SN Terbit' }
+            ];
+
+            steps.forEach((s, idx) => {
+                s.el.className = 'p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-3 text-slate-500';
+                s.el.innerHTML = `<i class="${idx === 0 ? 'fa-solid fa-circle-notch fa-spin text-cyan-400' : 'fa-regular fa-circle'}"></i><span>${s.text}</span>`;
+            });
+
+            modal.classList.remove('hidden');
+
+            const markStepDone = (idx) => {
+                steps[idx].el.className = 'p-3 rounded-xl bg-emerald-950/30 border border-emerald-500/30 flex items-center gap-3 text-emerald-300 font-medium';
+                steps[idx].el.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i><span>${steps[idx].text}</span>`;
+                if (steps[idx + 1]) {
+                    steps[idx + 1].el.className = 'p-3 rounded-xl bg-slate-900 border border-cyan-500/40 flex items-center gap-3 text-white';
+                    steps[idx + 1].el.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-cyan-400"></i><span>${steps[idx + 1].text}</span>`;
+                }
+            };
+
+            setTimeout(() => markStepDone(0), 500);
+            setTimeout(() => markStepDone(1), 1100);
+            setTimeout(() => markStepDone(2), 1700);
+            setTimeout(() => {
+                markStepDone(3);
+                const refId = 'SUP-' + Math.floor(100000 + Math.random() * 900000);
+                const snCode = 'SN' + Date.now().toString().slice(-8) + 'ZIDZ';
+                ord.status = 'Berhasil';
+                ord.supplierRef = refId;
+                ord.serialNumber = snCode;
+                if (!ord.stockDeducted) {
+                    const p = appData.products.find(x => x.id === ord.productId);
+                    if (p && p.stock >= ord.qty) { p.stock -= ord.qty; ord.stockDeducted = true; }
+                }
+                saveAppData();
+                addAuditLog(`Auto-Fulfill API selesai untuk ${ord.id} (SN: ${snCode})`);
+                pushNotification(`Pesanan Berhasil (${ord.id})`, `${ord.productName} telah terkirim otomatis. SN: ${snCode}`);
+
+                document.getElementById('ff-ref-id').textContent = refId;
+                document.getElementById('ff-sn-code').textContent = snCode;
+                resultBox.classList.remove('hidden');
+
+                closeBtn.disabled = false;
+                closeBtn.className = 'w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-600 text-white font-bold text-sm shadow-lg transition';
+                closeBtn.textContent = 'Selesai & Tutup';
+
+                renderStorefront();
+                if (!document.getElementById('view-staff-dashboard').classList.contains('hidden')) {
+                    renderAllStaffPanels();
+                }
+            }, 2300);
+        }
+
+        function closeFulfillmentModal() {
+            document.getElementById('fulfillment-modal').classList.add('hidden');
+        }
+
+        function closePaymentFailedModal() {
+            document.getElementById('payment-failed-modal').classList.add('hidden');
+        }
+
+        // CUSTOMER ORDER HISTORY, TIMELINE, REFUND REQUEST & REVIEWS
+        function openOrderHistoryModal() {
+            document.getElementById('order-search-input').value = '';
+            document.getElementById('order-status-filter').value = 'ALL';
+            renderCustomerOrders();
+            document.getElementById('order-history-modal').classList.remove('hidden');
+        }
+
+        function closeOrderHistoryModal() {
+            document.getElementById('order-history-modal').classList.add('hidden');
+        }
+
+        function renderCustomerOrders() {
+            const q = (document.getElementById('order-search-input')?.value || '').toLowerCase().trim();
+            const stFilter = document.getElementById('order-status-filter')?.value || 'ALL';
+            const list = appData.orders.filter(o => {
+                const matchText = o.id.toLowerCase().includes(q) || o.productName.toLowerCase().includes(q);
+                const matchStatus = stFilter === 'ALL' || o.status === stFilter;
+                return matchText && matchStatus;
+            });
+
+            const container = document.getElementById('customer-orders-list');
+            if (list.length === 0) {
+                container.innerHTML = `<div class="text-center py-10 text-sm text-slate-400">Belum ada riwayat pesanan yang cocok.</div>`;
+                return;
+            }
+
+            const statusBadges = {
+                'Menunggu': 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+                'Diproses': 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+                'Berhasil': 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                'Gagal': 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+                'Refund': 'bg-purple-500/20 text-purple-300 border-purple-500/30'
+            };
+
+            container.innerHTML = list.map(ord => {
+                const canCancel = ord.status === 'Menunggu';
+                const canReview = ord.status === 'Berhasil' && !ord.reviewed;
+                return `
+                    <div class="p-4 rounded-2xl bg-slate-900/95 border border-slate-800 space-y-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div>
+                                <div class="font-mono text-xs font-bold text-cyan-400">${escapeHtml(ord.id)} • <span class="text-slate-500 font-sans">${formatDateTime(ord.createdAt)}</span></div>
+                                <div class="font-bold text-white text-sm mt-0.5">${escapeHtml(ord.productName)} (${ord.qty}x)</div>
+                                <div class="text-xs text-slate-400">Tujuan: <span class="text-slate-200 font-mono">${escapeHtml(ord.targetAccount)}</span> • ${escapeHtml(ord.paymentMethod)}</div>
+                            </div>
+                            <div class="flex flex-col sm:items-end gap-1">
+                                <span class="font-display font-bold text-white text-base">${formatRupiah(ord.totalPaid)}</span>
+                                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${statusBadges[ord.status] || 'bg-slate-800 text-slate-300'}">${escapeHtml(ord.status)}</span>
+                            </div>
+                        </div>
+                        ${ord.serialNumber && ord.serialNumber !== '-' ? `
+                            <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs">
+                                <span class="text-slate-400">SN: <strong class="font-mono text-emerald-400">${escapeHtml(ord.serialNumber)}</strong></span>
+                                <button onclick="copyCouponCode('${escapeHtml(ord.serialNumber)}')" class="text-cyan-400 hover:underline">Salin SN</button>
+                            </div>
+                        ` : ''}
+                        <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-slate-800/80">
+                            ${canCancel ? `<button onclick="requestCustomerCancel('${ord.id}')" class="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 text-xs font-semibold border border-rose-500/30">Batalkan Pesanan</button>` : ''}
+                            ${canReview ? `<button onclick="openReviewModal('${ord.id}')" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-semibold border border-amber-500/30"><i class="fa-solid fa-star mr-1"></i>Beri Rating & Ulasan</button>` : ''}
+                            ${ord.reviewed ? `<span class="text-[11px] text-emerald-400"><i class="fa-solid fa-check mr-1"></i>Sudah Diulas</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function requestCustomerCancel(orderId) {
+            const ord = appData.orders.find(o => o.id === orderId);
+            if (!ord || ord.status !== 'Menunggu') return;
+            ord.status = 'Refund';
+            saveAppData();
+            pushNotification(`Pesanan Dibatalkan (${ord.id})`, 'Pesanan Anda telah dibatalkan dan masuk status Refund.');
+            renderCustomerOrders();
+            syncStoreBrandingAndMaintenance();
+            showToast(`Pesanan ${ord.id} dibatalkan.`, 'info');
+        }
+
+        // PRODUCT REVIEWS
+        function openReviewModal(orderId) {
+            const ord = appData.orders.find(o => o.id === orderId);
+            if (!ord) return;
+            document.getElementById('rev-order-id').value = ord.id;
+            document.getElementById('rev-product-id').value = ord.productId;
+            document.getElementById('rev-product-title').textContent = `Produk: ${ord.productName} (${ord.id})`;
+            document.getElementById('rev-author').value = '';
+            document.getElementById('rev-comment').value = '';
+            setReviewRating(5);
+            document.getElementById('review-modal').classList.remove('hidden');
+        }
+
+        function closeReviewModal() {
+            document.getElementById('review-modal').classList.add('hidden');
+        }
+
+        function setReviewRating(stars) {
+            selectedReviewRating = stars;
+            document.querySelectorAll('.rev-star').forEach((btn, idx) => {
+                btn.className = idx < stars ? 'rev-star text-amber-400' : 'rev-star text-slate-600';
+            });
+        }
+
+        function submitProductReview(e) {
+            e.preventDefault();
+            const orderId = document.getElementById('rev-order-id').value;
+            const productId = document.getElementById('rev-product-id').value;
+            const author = document.getElementById('rev-author').value.trim();
+            const comment = document.getElementById('rev-comment').value.trim();
+
+            appData.reviews.unshift({
+                id: 'rev-' + Date.now(),
+                productId,
+                author,
+                rating: selectedReviewRating,
+                comment,
+                createdAt: new Date().toISOString()
+            });
+            const ord = appData.orders.find(o => o.id === orderId);
+            if (ord) ord.reviewed = true;
+            saveAppData();
+            closeReviewModal();
+            renderCustomerOrders();
+            renderStorefront();
+            showToast('Terima kasih! Ulasan dan rating Anda telah diterbitkan.', 'success');
+        }
+
+        function openProductReviewsView(productId) {
+            const prod = appData.products.find(p => p.id === productId);
+            const revs = (appData.reviews || []).filter(r => r.productId === productId);
+            const stats = getProductRatingStats(productId);
+            document.getElementById('view-rev-title').textContent = prod ? prod.name : 'Ulasan Produk';
+            document.getElementById('view-rev-summary').textContent = `Rating Rata-Rata: ${stats.avg} / 5.0 (${stats.count} ulasan)`;
+            document.getElementById('view-rev-list').innerHTML = revs.length === 0
+                ? `<p class="text-slate-400 py-4 text-center">Belum ada ulasan tertulis untuk item ini.</p>`
+                : revs.map(r => `
+                    <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-white">${escapeHtml(r.author)}</span>
+                            <span class="text-amber-400">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                        </div>
+                        <p class="text-slate-300">${escapeHtml(r.comment)}</p>
+                    </div>
+                `).join('');
+            document.getElementById('product-reviews-view-modal').classList.remove('hidden');
+        }
+
+        // HELP DESK & TICKETS
+        function openHelpTicketModal() {
+            renderCustomerTicketsList();
+            document.getElementById('help-ticket-modal').classList.remove('hidden');
+        }
+
+        function closeHelpTicketModal() {
+            document.getElementById('help-ticket-modal').classList.add('hidden');
+        }
+
+        function handleCreateTicket(e) {
+            e.preventDefault();
+            const ticket = {
+                id: 'TCK-' + Date.now().toString().slice(-6),
+                createdAt: new Date().toISOString(),
+                name: document.getElementById('ticket-name').value.trim(),
+                invoice: document.getElementById('ticket-invoice').value.trim() || '-',
+                message: document.getElementById('ticket-message').value.trim(),
+                reply: '',
+                status: 'Open'
+            };
+            appData.tickets.unshift(ticket);
+            saveAppData();
+            e.target.reset();
+            renderCustomerTicketsList();
+            showToast(`Tiket bantuan ${ticket.id} berhasil dikirim!`, 'success');
+        }
+
+        function renderCustomerTicketsList() {
+            const container = document.getElementById('customer-tickets-list');
+            container.innerHTML = appData.tickets.length === 0
+                ? `<p class="text-xs text-slate-500">Belum ada tiket yang dikirim.</p>`
+                : appData.tickets.map(t => `
+                    <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono font-bold text-purple-400">${escapeHtml(t.id)} (Inv: ${escapeHtml(t.invoice)})</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${t.status === 'Resolved' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}">${escapeHtml(t.status)}</span>
+                        </div>
+                        <p class="text-slate-300">${escapeHtml(t.message)}</p>
+                        ${t.reply ? `<div class="p-2 rounded-lg bg-indigo-950/50 border border-indigo-500/30 text-indigo-200"><strong>Balasan CS:</strong> ${escapeHtml(t.reply)}</div>` : ''}
+                    </div>
+                `).join('');
+        }
+
+        // STAFF RBAC AUTHENTICATION
+        function openStaffAccess() {
+            if (currentStaffRole) { switchView('staff'); return; }
+            document.getElementById('staff-login-pin-input').value = '';
+            document.getElementById('staff-login-modal').classList.remove('hidden');
+        }
+
+        function closeStaffLoginModal() {
+            document.getElementById('staff-login-modal').classList.add('hidden');
+        }
+
+        function quickLoginRole(role) {
+            const pin = role === 'Owner' ? appData.settings.staffPin : ROLE_PINS[role];
+            document.getElementById('staff-login-pin-input').value = pin;
+            completeStaffLogin(role);
+        }
+
+        function handleStaffLogin(e) {
+            e.preventDefault();
+            const pin = document.getElementById('staff-login-pin-input').value.trim();
+            if (pin === appData.settings.staffPin) completeStaffLogin('Owner');
+            else if (pin === ROLE_PINS.Admin) completeStaffLogin('Admin');
+            else if (pin === ROLE_PINS.CS) completeStaffLogin('CS');
+            else if (pin === ROLE_PINS.Operator) completeStaffLogin('Operator');
+            else showToast('PIN Staf tidak dikenali!', 'error');
+        }
+
+        function completeStaffLogin(role) {
+            currentStaffRole = role;
+            localStorage.setItem(STAFF_SESSION_KEY, role);
+            addAuditLog(`Login ke Dashboard sebagai ${role}`);
+            closeStaffLoginModal();
+            showToast(`Berhasil login sebagai ${role}!`, 'success');
+            switchView('staff');
+        }
+
+        function logoutStaff() {
+            addAuditLog(`Logout dari sesi ${currentStaffRole}`);
+            currentStaffRole = null;
+            localStorage.removeItem(STAFF_SESSION_KEY);
+            showToast('Sesi staf telah diakhiri.', 'info');
+            switchView('store');
+        }
+
+        function applyRbacPermissions() {
+            const allowedTabs = ROLE_PERMISSIONS[currentStaffRole] || ['orders'];
+            document.querySelectorAll('.staff-tab-btn').forEach(btn => {
+                const tabKey = btn.getAttribute('data-tab');
+                btn.classList.toggle('hidden', !allowedTabs.includes(tabKey));
+            });
+            switchStaffTab(allowedTabs[0]);
+        }
+
+        function switchStaffTab(tabName) {
+            const allowedTabs = ROLE_PERMISSIONS[currentStaffRole] || [];
+            if (!allowedTabs.includes(tabName)) {
+                showToast(`Peran ${currentStaffRole} tidak memiliki izin akses ke modul ini.`, 'error');
+                return;
+            }
+            document.querySelectorAll('.staff-tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.staff-tab-btn').forEach(btn => {
+                btn.className = `staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-cyber-card text-slate-400 hover:text-white border border-cyber-border transition flex items-center gap-2 shrink-0 ${!allowedTabs.includes(btn.getAttribute('data-tab')) ? 'hidden' : ''}`;
+            });
+            document.getElementById(`staff-tab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tabName}`).className = 'staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-600 text-white transition flex items-center gap-2 shrink-0';
+            renderAllStaffPanels();
+        }
+
+        function renderAllStaffPanels() {
+            renderStaffStats();
+            renderStaffOrdersTable();
+            renderStaffProductsTable();
+            renderStaffCouponsTable();
+            renderStaffTicketsTable();
+            renderAuditLogs();
+            loadSettingsFormValues();
+        }
+
+        function renderStaffStats() {
+            const validOrders = appData.orders.filter(o => o.status === 'Berhasil');
+            const failedOrders = appData.orders.filter(o => o.status === 'Gagal' || o.status === 'Refund');
+            const totalOrders = appData.orders.length;
+            const rate = totalOrders > 0 ? Math.round((validOrders.length / totalOrders) * 100) : 100;
+            const uniqueCustomers = new Set(appData.orders.map(o => o.targetAccount)).size;
+
+            document.getElementById('stat-revenue').textContent = formatRupiah(validOrders.reduce((acc, o) => acc + o.totalPaid, 0));
+            document.getElementById('stat-orders').textContent = totalOrders;
+            document.getElementById('stat-success-rate').textContent = `Success Rate: ${rate}%`;
+            document.getElementById('stat-customers').textContent = uniqueCustomers;
+            document.getElementById('stat-failed').textContent = failedOrders.length;
+            document.getElementById('stat-tickets').textContent = appData.tickets.filter(t => t.status === 'Open').length;
+
+            // Count sales per product
+            const salesMap = {};
+            validOrders.forEach(o => { salesMap[o.productName] = (salesMap[o.productName] || 0) + o.qty; });
+            const ranked = appData.products.map(p => ({ name: p.name, sold: salesMap[p.name] || 0, stock: p.stock }))
+                .sort((a, b) => b.sold - a.sold).slice(0, 4);
+            const maxSold = Math.max(1, ...ranked.map(r => r.sold));
+
+            document.getElementById('top-products-list').innerHTML = ranked.map(item => `
+                <div class="space-y-1">
+                    <div class="flex justify-between text-xs">
+                        <span class="font-semibold text-white">${escapeHtml(item.name)}</span>
+                        <span class="text-cyan-400">${item.sold} Terjual • Sisa Stok: ${item.stock}</span>
+                    </div>
+                    <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-indigo-500 to-cyan-400" style="width: ${Math.max(8, Math.round((item.sold / maxSold) * 100))}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function pingSupplierApi() {
+            addAuditLog('Melakukan Test Ping ke API Supplier Digiflazz/VIP');
+            showToast('API Supplier Digiflazz & VIP Reseller merespons dalam 84ms (200 OK)!', 'success');
+        }
+
+        function renderStaffOrdersTable() {
+            const filter = document.getElementById('staff-order-filter')?.value || 'ALL';
+            const filtered = appData.orders.filter(o => filter === 'ALL' || o.status === filter);
+            const tbody = document.getElementById('staff-orders-tbody');
+            const statusOptions = ['Menunggu', 'Diproses', 'Berhasil', 'Gagal', 'Refund'];
+
+            tbody.innerHTML = filtered.length === 0
+                ? `<tr><td colspan="6" class="p-8 text-center text-slate-400">Tidak ada pesanan pada filter ini.</td></tr>`
+                : filtered.map(ord => `
+                    <tr>
+                        <td class="p-4">
+                            <div class="font-mono font-bold text-cyan-400 text-xs">${escapeHtml(ord.id)}</div>
+                            <div class="text-[11px] text-slate-400">${formatDateTime(ord.createdAt)}</div>
+                        </td>
+                        <td class="p-4">
+                            <div class="font-semibold text-white">${escapeHtml(ord.productName)} (${ord.qty}x)</div>
+                            <div class="text-[11px] text-slate-400">${escapeHtml(ord.paymentMethod)}</div>
+                        </td>
+                        <td class="p-4">
+                            <div class="font-mono text-xs text-slate-200">${escapeHtml(ord.targetAccount)}</div>
+                            ${ord.serialNumber && ord.serialNumber !== '-' ? `<div class="font-mono text-[11px] text-emerald-400">SN: ${escapeHtml(ord.serialNumber)}</div>` : ''}
+                        </td>
+                        <td class="p-4 font-bold text-emerald-400">${formatRupiah(ord.totalPaid)}</td>
+                        <td class="p-4">
+                            <select onchange="updateOrderStatus('${ord.id}', this.value)" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white">
+                                ${statusOptions.map(st => `<option value="${st}" ${ord.status === st ? 'selected' : ''}>${st}</option>`).join('')}
+                            </select>
+                        </td>
+                        <td class="p-4 text-right">
+                            ${(ord.status === 'Menunggu' || ord.status === 'Diproses')
+                                ? `<button onclick="runAutomaticFulfillmentPipeline('${ord.id}')" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-white text-xs font-bold shadow"><i class="fa-solid fa-bolt mr-1"></i>Auto-Fulfill API</button>`
+                                : `<span class="text-xs text-slate-500">Selesai</span>`}
+                        </td>
+                    </tr>
+                `).join('');
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            const ord = appData.orders.find(o => o.id === orderId);
+            if (!ord) return;
+            const prod = appData.products.find(p => p.id === ord.productId);
+            const isReturned = newStatus === 'Gagal' || newStatus === 'Refund';
+
+            if (isReturned && ord.stockDeducted && prod) {
+                prod.stock += Number(ord.qty || 0);
+                ord.stockDeducted = false;
+                showToast(`Stok ${prod.name} (+${ord.qty}) otomatis kembali karena ${newStatus}.`, 'info');
+            } else if (!isReturned && !ord.stockDeducted && prod && prod.stock >= ord.qty) {
+                prod.stock -= Number(ord.qty || 0);
+                ord.stockDeducted = true;
+            }
+
+            ord.status = newStatus;
+            saveAppData();
+            addAuditLog(`Mengubah status pesanan ${ord.id} menjadi ${newStatus}`);
+            pushNotification(`Update Pesanan (${ord.id})`, `Status pesanan ${ord.productName} kini: ${newStatus}.`);
+            renderStaffStats();
+            renderStaffOrdersTable();
+            renderStaffProductsTable();
+        }
+
+        function clearAllOrders() {
+            appData.orders = [];
+            saveAppData();
+            addAuditLog('Membersihkan seluruh riwayat pesanan');
+            renderStaffStats();
+            renderStaffOrdersTable();
+            syncStoreBrandingAndMaintenance();
+        }
+
+        // PRODUCT MANAGEMENT
+        function handleSaveProduct(e) {
+            e.preventDefault();
+            const id = document.getElementById('prod-id').value;
+            const data = {
+                name: document.getElementById('prod-name').value.trim(),
+                category: document.getElementById('prod-category').value.trim(),
+                badge: document.getElementById('prod-badge').value.trim(),
+                price: parseInt(document.getElementById('prod-price').value || 0),
+                stock: parseInt(document.getElementById('prod-stock').value || 0),
+                icon: document.getElementById('prod-icon').value.trim() || 'fa-gem',
+                imageUrl: document.getElementById('prod-image').value.trim(),
+                desc: document.getElementById('prod-desc').value.trim(),
+                fieldType: document.getElementById('prod-field-type').value
+            };
+            if (id) {
+                const idx = appData.products.findIndex(p => p.id === id);
+                if (idx !== -1) appData.products[idx] = { ...appData.products[idx], ...data };
+                addAuditLog(`Memperbarui produk: ${data.name}`);
+            } else {
+                appData.products.unshift({ id: 'prod-' + Date.now(), ...data });
+                addAuditLog(`Menambahkan produk baru: ${data.name}`);
+            }
+            saveAppData();
+            resetProductForm();
+            renderStaffProductsTable();
+            showToast('Produk berhasil disimpan!', 'success');
+        }
+
+        function editProductForm(prodId) {
+            const p = appData.products.find(x => x.id === prodId);
+            if (!p) return;
+            document.getElementById('prod-id').value = p.id;
+            document.getElementById('prod-name').value = p.name;
+            document.getElementById('prod-category').value = p.category;
+            document.getElementById('prod-badge').value = p.badge || '';
+            document.getElementById('prod-price').value = p.price;
+            document.getElementById('prod-stock').value = p.stock;
+            document.getElementById('prod-icon').value = p.icon || '';
+            document.getElementById('prod-image').value = p.imageUrl || '';
+            document.getElementById('prod-desc').value = p.desc || '';
+            document.getElementById('prod-field-type').value = p.fieldType || 'auto';
+            document.getElementById('prod-cancel-edit-btn').classList.remove('hidden');
+        }
+
+        function resetProductForm() {
+            document.getElementById('product-form').reset();
+            document.getElementById('prod-id').value = '';
+            document.getElementById('prod-cancel-edit-btn').classList.add('hidden');
+        }
+
+        function adjustProductStock(prodId, delta) {
+            const prod = appData.products.find(p => p.id === prodId);
+            if (!prod) return;
+            prod.stock = Math.max(0, Number(prod.stock) + delta);
+            saveAppData();
+            addAuditLog(`Mengubah stok ${prod.name} menjadi ${prod.stock}`);
+            renderStaffProductsTable();
+        }
+
+        function deleteProduct(prodId) {
+            const prod = appData.products.find(p => p.id === prodId);
+            appData.products = appData.products.filter(p => p.id !== prodId);
+            saveAppData();
+            addAuditLog(`Menghapus produk: ${prod?.name || prodId}`);
+            renderStaffProductsTable();
+        }
+
+        function renderStaffProductsTable() {
+            document.getElementById('staff-total-products-badge').textContent = `${appData.products.length} Produk`;
+            document.getElementById('staff-products-tbody').innerHTML = appData.products.map(prod => `
+                <tr>
+                    <td class="p-4">
+                        <div class="font-bold text-white">${escapeHtml(prod.name)}</div>
+                        <div class="text-xs text-cyan-400">${escapeHtml(prod.category)} • <span class="text-slate-400 font-mono">${escapeHtml(prod.fieldType || 'auto')}</span></div>
+                    </td>
+                    <td class="p-4 text-slate-200 font-semibold">${formatRupiah(prod.price)}</td>
+                    <td class="p-4">
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="adjustProductStock('${prod.id}', -1)" class="w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-xs">-1</button>
+                            <span class="px-2 font-bold text-emerald-400">${prod.stock}</span>
+                            <button onclick="adjustProductStock('${prod.id}', 1)" class="w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-xs">+1</button>
+                        </div>
+                    </td>
+                    <td class="p-4 text-right space-x-1">
+                        <button onclick="editProductForm('${prod.id}')" class="p-2 rounded bg-slate-800 hover:bg-slate-700 text-xs"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteProduct('${prod.id}')" class="p-2 rounded bg-slate-800 hover:bg-rose-900/50 text-rose-400 text-xs"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // COUPONS
+        function handleCreateCoupon(e) {
+            e.preventDefault();
+            const code = document.getElementById('coup-code').value.trim().toUpperCase();
+            const type = document.getElementById('coup-type').value;
+            const value = parseInt(document.getElementById('coup-value').value);
+            const usageLimit = parseInt(document.getElementById('coup-limit').value || 100);
+            const startDate = document.getElementById('coup-start').value;
+            const endDate = document.getElementById('coup-end').value;
+            if (new Date(endDate) <= new Date(startDate)) { showToast('Waktu berakhir harus lebih lambat!', 'error'); return; }
+            appData.coupons.unshift({ id: 'coup-' + Date.now(), code, type, value, usageLimit, usedCount: 0, startDate, endDate, active: true });
+            saveAppData();
+            addAuditLog(`Membuat voucher promo baru: ${code}`);
+            e.target.reset();
+            renderStaffCouponsTable();
+            showToast('Voucher promo diaktifkan!', 'success');
+        }
+
+        function toggleCouponActive(id) {
+            const c = appData.coupons.find(x => x.id === id);
+            if (c) { c.active = !c.active; saveAppData(); renderStaffCouponsTable(); }
+        }
+
+        function deleteCoupon(id) {
+            appData.coupons = appData.coupons.filter(x => x.id !== id);
+            saveAppData();
+            renderStaffCouponsTable();
+        }
+
+        function renderStaffCouponsTable() {
+            document.getElementById('staff-coupons-tbody').innerHTML = appData.coupons.map(c => {
+                const st = getCouponStatus(c);
+                const valText = c.type === 'fixed' ? formatRupiah(c.value) : `${c.value}%`;
+                return `
+                    <tr>
+                        <td class="p-4 font-mono font-bold text-purple-300">${escapeHtml(c.code)}</td>
+                        <td class="p-4 font-bold text-emerald-400">${valText}</td>
+                        <td class="p-4 text-xs text-slate-300">${c.usedCount || 0} / ${c.usageLimit || 100}</td>
+                        <td class="p-4"><span class="px-2 py-0.5 rounded-full text-[11px] font-bold border ${st.badgeClass}">${st.label}</span></td>
+                        <td class="p-4 text-right space-x-1">
+                            <button onclick="toggleCouponActive('${c.id}')" class="px-2.5 py-1 rounded bg-slate-800 text-xs">Toggle</button>
+                            <button onclick="deleteCoupon('${c.id}')" class="p-2 rounded bg-slate-800 text-rose-400 text-xs"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // TICKETS
+        function renderStaffTicketsTable() {
+            document.getElementById('staff-tickets-tbody').innerHTML = appData.tickets.length === 0
+                ? `<tr><td colspan="5" class="p-8 text-center text-slate-400">Tidak ada tiket bantuan masuk.</td></tr>`
+                : appData.tickets.map(t => `
+                    <tr>
+                        <td class="p-4">
+                            <div class="font-mono text-cyan-400 font-bold text-xs">${escapeHtml(t.id)}</div>
+                            <div class="text-[11px] text-slate-400">Inv: ${escapeHtml(t.invoice)}</div>
+                        </td>
+                        <td class="p-4 font-bold text-white text-xs">${escapeHtml(t.name)}</td>
+                        <td class="p-4 text-xs text-slate-200 space-y-2 max-w-xs">
+                            <div>${escapeHtml(t.message)}</div>
+                            <div class="flex gap-1.5">
+                                <input type="text" id="reply-input-${t.id}" value="${escapeHtml(t.reply || '')}" placeholder="Tulis balasan CS..." class="flex-1 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white">
+                                <button onclick="replyTicket('${t.id}')" class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-xs font-bold">Kirim</button>
+                            </div>
+                        </td>
+                        <td class="p-4"><span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${t.status === 'Resolved' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}">${escapeHtml(t.status)}</span></td>
+                        <td class="p-4 text-right">
+                            <button onclick="resolveTicket('${t.id}')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">Tandai Selesai</button>
+                        </td>
+                    </tr>
+                `).join('');
+        }
+
+        function replyTicket(ticketId) {
+            const t = appData.tickets.find(x => x.id === ticketId);
+            if (!t) return;
+            t.reply = document.getElementById(`reply-input-${ticketId}`).value.trim();
+            saveAppData();
+            addAuditLog(`Membalas tiket bantuan ${t.id}`);
+            pushNotification(`Balasan Pusat Bantuan (${t.id})`, t.reply);
+            renderStaffTicketsTable();
+            showToast('Balasan terkirim ke pelanggan!', 'success');
+        }
+
+        function resolveTicket(ticketId) {
+            const t = appData.tickets.find(x => x.id === ticketId);
+            if (t) t.status = 'Resolved';
+            saveAppData();
+            addAuditLog(`Menyelesaikan tiket ${ticketId}`);
+            renderStaffTicketsTable();
+            renderStaffStats();
+            showToast('Status tiket diperbarui menjadi Resolved.', 'info');
+        }
+
+        // AUDIT LOGS
+        function renderAuditLogs() {
+            const container = document.getElementById('staff-audit-log-list');
+            container.innerHTML = appData.auditLogs.length === 0
+                ? `<div class="p-6 text-center text-slate-500">Belum ada log aktivitas.</div>`
+                : appData.auditLogs.map(l => `
+                    <div class="p-3.5 px-5 flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-2.5">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300">${escapeHtml(l.role)}</span>
+                            <span class="text-slate-200">${escapeHtml(l.action)}</span>
+                        </div>
+                        <span class="text-slate-500 shrink-0">${formatDateTime(l.time)}</span>
+                    </div>
+                `).join('');
+        }
+
+        function clearAuditLogs() {
+            appData.auditLogs = [];
+            saveAppData();
+            renderAuditLogs();
+        }
+
+        // SETTINGS & LEGAL
+        function loadSettingsFormValues() {
+            const s = appData.settings;
+            document.getElementById('setting-maint-toggle').checked = !!s.maintenanceMode;
+            document.getElementById('setting-maint-msg').value = s.maintenanceMessage || '';
+            document.getElementById('setting-store-name').value = s.storeName || 'Zidzzz Store';
+            document.getElementById('setting-admin-wa').value = s.adminWhatsapp || '';
+            document.getElementById('setting-staff-pin').value = s.staffPin || 'admin123';
+            document.getElementById('setting-announcement').value = s.announcement || '';
+        }
+
+        function toggleMaintenanceImmediate(isChecked) {
+            appData.settings.maintenanceMode = isChecked;
+            saveAppData();
+            addAuditLog(`Mengubah Mode Maintenance menjadi ${isChecked ? 'AKTIF' : 'NONAKTIF'}`);
+            syncStoreBrandingAndMaintenance();
+            showToast(isChecked ? 'Maintenance AKTIF!' : 'Maintenance DIMATIKAN!', isChecked ? 'warning' : 'success');
+        }
+
+        function handleSaveSettings(e) {
+            e.preventDefault();
+            appData.settings.maintenanceMode = document.getElementById('setting-maint-toggle').checked;
+            appData.settings.maintenanceMessage = document.getElementById('setting-maint-msg').value.trim();
+            appData.settings.storeName = document.getElementById('setting-store-name').value.trim() || 'Zidzzz Store';
+            appData.settings.adminWhatsapp = document.getElementById('setting-admin-wa').value.trim();
+            appData.settings.staffPin = document.getElementById('setting-staff-pin').value.trim() || 'admin123';
+            appData.settings.announcement = document.getElementById('setting-announcement').value.trim();
+            saveAppData();
+            addAuditLog('Menyimpan perubahan pengaturan toko');
+            syncStoreBrandingAndMaintenance();
+            showToast('Pengaturan Enterprise disimpan!', 'success');
+        }
+
+        function resetDefaultDemoData() {
+            appData = getDefaultSeedData();
+            saveAppData();
+            renderAllStaffPanels();
+            syncStoreBrandingAndMaintenance();
+            showToast('Data demo berhasil di-reset ke awal.', 'info');
+        }
+
+        function openLegalModal(type) {
+            const title = document.getElementById('legal-modal-title');
+            const body = document.getElementById('legal-modal-body');
+            if (type === 'tos') {
+                title.textContent = 'Syarat & Ketentuan Layanan — Zidzzz Store';
+                body.innerHTML = `
+                    <p><strong>1. Ketentuan Umum:</strong> Dengan melakukan transaksi di Zidzzz Store, pelanggan dianggap telah memeriksa kesesuaian User ID, Zone ID, Username, atau Nomor Tujuan sebelum menekan tombol pembayaran.</p>
+                    <p><strong>2. Automatic Fulfillment:</strong> Pesanan yang telah terverifikasi pembayarannya akan langsung dikirimkan ke API Supplier secara otomatis. Kesalahan input data tujuan oleh pembeli bukan merupakan tanggung jawab pihak toko.</p>
+                    <p><strong>3. Kebijakan Refund:</strong> Apabila terjadi kegagalan sistem pada server supplier atau stok kosong setelah pembayaran tervalidasi, dana akan dikembalikan 100% melalui mekanisme Refund.</p>
+                `;
+            } else {
+                title.textContent = 'Kebijakan Privasi — Zidzzz Store';
+                body.innerHTML = `
+                    <p><strong>1. Pengumpulan Data:</strong> Zidzzz Store hanya menyimpan data identifikasi akun game/nomor tujuan dan nomor invoice untuk keperluan pemrosesan pengiriman item digital dan pelacakan riwayat pesanan.</p>
+                    <p><strong>2. Keamanan Transaksi:</strong> Seluruh data transaksi dilindungi enkripsi sesi dan log audit staf berbasis hak akses (RBAC) guna mencegah penyalahgunaan data.</p>
+                `;
+            }
+            document.getElementById('legal-modal').classList.remove('hidden');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const now = new Date();
+            const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+            document.getElementById('coup-start').value = toLocalDateTimeInput(now);
+            document.getElementById('coup-end').value = toLocalDateTimeInput(tomorrow);
+            renderStorefront();
+        });
+    </script>
+</body>
+</html>
