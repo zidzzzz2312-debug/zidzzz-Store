@@ -318,7 +318,7 @@
                 <i class="fa-solid fa-headset"></i> Pusat Bantuan / Tiket
             </button>
             <button onclick="switchStaffTab('logs')" id="tab-btn-logs" data-tab="logs" class="staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-cyber-card text-slate-400 hover:text-white border border-cyber-border transition flex items-center gap-2 shrink-0">
-                <i class="fa-solid fa-user-shield"></i> Hak Akses & Log Staf
+                <i class="fa-solid fa-clock-rotate-left"></i> Log Aktivitas Staf
             </button>
             <button onclick="switchStaffTab('settings')" id="tab-btn-settings" data-tab="settings" class="staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-cyber-card text-slate-400 hover:text-white border border-cyber-border transition flex items-center gap-2 shrink-0">
                 <i class="fa-solid fa-sliders"></i> Pengaturan & Maintenance
@@ -615,42 +615,13 @@
             </div>
         </div>
 
-        <!-- TAB 6: HAK AKSES & LOG STAF (ANONIM — TANPA NAMA ROLE & TANPA BOCORAN SANDI) -->
+        <!-- TAB 6: LOG AKTIVITAS STAF -->
         <div id="staff-tab-logs" class="hidden staff-tab-content space-y-6">
-            <div class="glass-panel rounded-2xl p-6 border border-cyber-border space-y-4">
-                <div>
-                    <h3 class="font-display text-lg font-bold text-white">Matriks Tingkatan Hak Akses Internal</h3>
-                    <p class="text-xs text-slate-400 mt-0.5">Sistem mengenali kewenangan modul secara otomatis berdasarkan sandi akses yang dimasukkan saat login.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
-                    <div class="p-4 rounded-2xl bg-slate-900/90 border border-indigo-500/30 space-y-1.5">
-                        <div class="font-bold text-indigo-300 flex items-center gap-2"><i class="fa-solid fa-key"></i> Tingkatan Akses Penuh (Level 1)</div>
-                        <p class="text-slate-400 leading-relaxed">Akses penuh ke seluruh modul: Statistik, Fulfillment, Produk, Voucher, Tiket Bantuan, Manajemen Sandi, dan Pengaturan Maintenance.</p>
-                    </div>
-                    <div class="p-4 rounded-2xl bg-slate-900/90 border border-cyan-500/30 space-y-1.5">
-                        <div class="font-bold text-cyan-300 flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> Tingkatan Operasional Toko (Level 2)</div>
-                        <p class="text-slate-400 leading-relaxed">Mengelola Statistik Penjualan, Automatic Fulfillment Pesanan, Manajemen Produk & Stok, Voucher Promo, dan Tiket Bantuan.</p>
-                    </div>
-                    <div class="p-4 rounded-2xl bg-slate-900/90 border border-emerald-500/30 space-y-1.5">
-                        <div class="font-bold text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> Tingkatan Audit & Keuangan (Level 3)</div>
-                        <p class="text-slate-400 leading-relaxed">Akses pemantauan Statistik Pendapatan, Laporan Transaksi, Riwayat Pesanan, serta Log Aktivitas Sistem.</p>
-                    </div>
-                    <div class="p-4 rounded-2xl bg-slate-900/90 border border-purple-500/30 space-y-1.5">
-                        <div class="font-bold text-purple-300 flex items-center gap-2"><i class="fa-solid fa-headset"></i> Tingkatan Layanan Pelanggan (Level 4)</div>
-                        <p class="text-slate-400 leading-relaxed">Menangani Pusat Bantuan / Tiket komplain pelanggan serta pemantauan status dan refund pesanan.</p>
-                    </div>
-                    <div class="p-4 rounded-2xl bg-slate-900/90 border border-amber-500/30 space-y-1.5">
-                        <div class="font-bold text-amber-300 flex items-center gap-2"><i class="fa-solid fa-bolt"></i> Tingkatan Eksekusi Fulfillment (Level 5)</div>
-                        <p class="text-slate-400 leading-relaxed">Fokus mengeksekusi antrean Automatic Fulfillment API Supplier dan pembaruan status pengiriman.</p>
-                    </div>
-                </div>
-            </div>
-
             <div class="glass-panel rounded-2xl p-6 border border-cyber-border space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                     <div>
                         <h3 class="font-display text-lg font-bold text-white">Log Aktivitas Staf & Sistem</h3>
-                        <p class="text-xs text-slate-400 mt-0.5">Catatan seluruh tindakan administratif dan proses otomatis pada dashboard tanpa menampilkan identitas role.</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Catatan seluruh tindakan administratif dan proses otomatis pada dashboard.</p>
                     </div>
                     <button onclick="clearStaffLogs()" class="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-xs font-semibold">Bersihkan Log</button>
                 </div>
@@ -707,17 +678,8 @@
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Perbarui Sandi Akses Internal</label>
-                            <div class="flex gap-2">
-                                <select id="setting-role-target" class="px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
-                                    <option value="owner">Tingkat 1</option>
-                                    <option value="admin">Tingkat 2</option>
-                                    <option value="finance">Tingkat 3</option>
-                                    <option value="cs">Tingkat 4</option>
-                                    <option value="operator">Tingkat 5</option>
-                                </select>
-                                <input type="password" id="setting-staff-pin" autocomplete="new-password" placeholder="Sandi baru..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white font-mono">
-                            </div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Ubah Sandi Akses Staf</label>
+                            <input type="password" id="setting-staff-pin" placeholder="Isi untuk mengubah sandi..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white font-mono">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1.5">Teks Pengumuman Banner</label>
@@ -1059,13 +1021,7 @@
                     maintenanceStart: '',
                     maintenanceEnd: '',
                     maintenanceMessage: 'Sistem sedang melakukan pemeliharaan rutin & sinkronisasi API supplier.',
-                    rolePins: {
-                        owner: 'admin123',
-                        admin: 'admin456',
-                        finance: 'fin789',
-                        cs: 'cs123',
-                        operator: 'op123'
-                    },
+                    staffPin: 'admin123',
                     adminWhatsapp: '6281299887766'
                 },
                 products: [
@@ -1074,10 +1030,9 @@
                     { id: 'prod-3', name: '140 Diamonds Free Fire', category: 'Free Fire', price: 19500, stock: 60, badge: 'Instan', icon: 'fa-fire', imageUrl: '', desc: 'Top-up FF legal 100% via server supplier.', fieldType: 'player_id' },
                     { id: 'prod-4', name: '475 Valorant Points', category: 'Valorant', price: 56000, stock: 20, badge: 'Region ID', icon: 'fa-crosshairs', imageUrl: '', desc: 'Khusus akun Valorant region Indonesia.', fieldType: 'riot_id' },
                     { id: 'prod-5', name: '60 UC PUBG Mobile', category: 'PUBG Mobile', price: 14500, stock: 50, badge: 'Global/ID', icon: 'fa-parachute-box', imageUrl: '', desc: 'UC masuk otomatis dalam hitungan detik.', fieldType: 'player_id' },
-                    { id: 'prod-6', name: '300 + 30 Genesis Crystals', category: 'Genshin Impact', price: 79000, stock: 35, badge: 'Asia/Global', icon: 'fa-wand-sparkles', imageUrl: '', desc: 'Pengisian resmi via UID & Server Genshin Impact.', fieldType: 'game_id_zone' },
-                    { id: 'prod-7', name: '400 Robux Instant', category: 'Roblox', price: 65000, stock: 25, badge: 'Populer', icon: 'fa-cube', imageUrl: '', desc: 'Top-up Robux legal via Username Roblox.', fieldType: 'roblox_user' },
-                    { id: 'prod-8', name: 'Saldo DANA Rp 50.000', category: 'Pulsa & E-Wallet', price: 51500, stock: 25, badge: '24 Jam', icon: 'fa-wallet', imageUrl: '', desc: 'Transfer saldo DANA otomatis tanpa admin.', fieldType: 'phone' },
-                    { id: 'prod-9', name: 'YouTube Premium 1 Bulan', category: 'Aplikasi Premium', price: 15000, stock: 12, badge: 'Garansi', icon: 'fa-play', imageUrl: '', desc: 'Bebas iklan + YouTube Music bergaransi.', fieldType: 'email' }
+                    { id: 'prod-6', name: '400 Robux Instant', category: 'Roblox', price: 65000, stock: 25, badge: 'Populer', icon: 'fa-cube', imageUrl: '', desc: 'Top-up Robux legal via Username Roblox.', fieldType: 'roblox_user' },
+                    { id: 'prod-7', name: 'Saldo DANA Rp 50.000', category: 'Pulsa & E-Wallet', price: 51500, stock: 25, badge: '24 Jam', icon: 'fa-wallet', imageUrl: '', desc: 'Transfer saldo DANA otomatis tanpa admin.', fieldType: 'phone' },
+                    { id: 'prod-8', name: 'YouTube Premium 1 Bulan', category: 'Aplikasi Premium', price: 15000, stock: 12, badge: 'Garansi', icon: 'fa-play', imageUrl: '', desc: 'Bebas iklan + YouTube Music bergaransi.', fieldType: 'email' }
                 ],
                 coupons: [
                     { id: 'coup-1', code: 'ZIDZZZ20', type: 'percent', value: 20, usageLimit: 100, usedCount: 12, startDate: toLocalDateTimeInput(yesterday), endDate: toLocalDateTimeInput(nextWeek), active: true },
@@ -1086,17 +1041,16 @@
                 payments: [
                     { id: 'pay-1', name: 'QRIS All Payment', type: 'QRIS', accountNumber: 'QRIS ZIDZZZ STORE', accountHolder: 'Zidzzz Digital Store', active: true },
                     { id: 'pay-2', name: 'DANA Instan', type: 'E-Wallet', accountNumber: '0812-9988-7766', accountHolder: 'Zidzzz Official', active: true },
-                    { id: 'pay-3', name: 'OVO / GoPay Instan', type: 'E-Wallet', accountNumber: '0812-9988-7766', accountHolder: 'Zidzzz Official', active: true },
-                    { id: 'pay-4', name: 'BCA Virtual Account', type: 'Bank Transfer', accountNumber: '88019928371', accountHolder: 'PT Zidzzz Digital', active: true }
+                    { id: 'pay-3', name: 'BCA Virtual Account', type: 'Bank Transfer', accountNumber: '88019928371', accountHolder: 'PT Zidzzz Digital', active: true }
                 ],
                 orders: [],
                 tickets: [],
                 staffLogs: [
-                    { id: 'log-1', action: 'Sistem Zidzzz Store Enterprise aktif dengan Real Automatic Order Fulfillment.', createdAt: new Date().toISOString() }
+                    { id: 'log-1', action: 'Sistem Zidzzz Store Enterprise v8 aktif dengan Real Automatic Order Fulfillment.', createdAt: new Date().toISOString() }
                 ],
                 reviews: [
                     { id: 'rev-1', productId: 'prod-1', author: 'RakaGaming', rating: 5, comment: 'Gila cepet banget, 3 detik diamond langsung masuk!', createdAt: new Date().toISOString() },
-                    { id: 'rev-2', productId: 'prod-7', author: 'NadiaRbx', rating: 5, comment: 'Robux aman dan terpercaya, dapet SN juga.', createdAt: new Date().toISOString() }
+                    { id: 'rev-2', productId: 'prod-6', author: 'NadiaRbx', rating: 5, comment: 'Robux aman dan terpercaya, dapet SN juga.', createdAt: new Date().toISOString() }
                 ],
                 notifications: [
                     { id: 'notif-1', title: 'Selamat Datang di Zidzzz Store', message: 'Gunakan kode ZIDZZZ20 untuk diskon 20% transaksi pertama Anda.', read: false, createdAt: new Date().toISOString() }
@@ -1104,20 +1058,8 @@
             };
         }
 
-        const SILENT_ROLE_PERMISSIONS = {
-            owner: ['stats', 'orders', 'products', 'coupons', 'tickets', 'logs', 'settings'],
-            admin: ['stats', 'orders', 'products', 'coupons', 'tickets', 'logs'],
-            finance: ['stats', 'orders', 'logs'],
-            cs: ['tickets', 'orders', 'logs'],
-            operator: ['orders', 'logs']
-        };
-
         let appData = loadAppData();
-        let activeSilentRole = sessionStorage.getItem(STAFF_SESSION_KEY) || localStorage.getItem(STAFF_SESSION_KEY) || null;
-        if (activeSilentRole && !SILENT_ROLE_PERMISSIONS[activeSilentRole]) {
-            activeSilentRole = null;
-        }
-        let isStaffAuthenticated = Boolean(activeSilentRole);
+        let isStaffAuthenticated = localStorage.getItem(STAFF_SESSION_KEY) === 'true';
         let selectedGameCategory = null;
         let currentCheckoutProduct = null;
         let appliedCoupon = null;
@@ -1129,7 +1071,6 @@
             'Free Fire': { publisher: 'Garena • API Auto Fulfill', icon: 'fa-fire-flame-curved', gradient: 'from-orange-600/30 via-amber-600/20 to-rose-500/20', accent: 'text-amber-400', guide: 'Masukkan Player ID Free Fire Anda.' },
             'Valorant': { publisher: 'Riot Games • Region ID', icon: 'fa-crosshairs', gradient: 'from-rose-600/30 via-red-600/20 to-slate-900', accent: 'text-rose-400', guide: 'Masukkan Riot ID beserta Tagline.' },
             'PUBG Mobile': { publisher: 'Tencent • Global & ID', icon: 'fa-parachute-box', gradient: 'from-yellow-600/30 via-amber-600/20 to-stone-900', accent: 'text-yellow-400', guide: 'Masukkan Character ID PUBG Mobile Anda.' },
-            'Genshin Impact': { publisher: 'HoYoverse • Official UID', icon: 'fa-wand-sparkles', gradient: 'from-indigo-600/30 via-violet-600/20 to-sky-500/20', accent: 'text-violet-300', guide: 'Masukkan UID & Server (Asia/America/Europe).' },
             'Roblox': { publisher: 'Roblox Corp • Instant API', icon: 'fa-cube', gradient: 'from-slate-600/30 via-zinc-600/20 to-cyan-500/20', accent: 'text-cyan-300', guide: 'Masukkan Username Roblox Anda dengan benar.' },
             'Pulsa & E-Wallet': { publisher: 'All Operator • 24 Jam', icon: 'fa-wallet', gradient: 'from-emerald-600/30 via-teal-600/20 to-cyan-500/20', accent: 'text-emerald-400', guide: 'Masukkan nomor HP tujuan pengisian.' },
             'Aplikasi Premium': { publisher: 'Resmi & Bergaransi', icon: 'fa-crown', gradient: 'from-fuchsia-600/30 via-purple-600/20 to-indigo-500/20', accent: 'text-fuchsia-400', guide: 'Masukkan Email aktif untuk pengiriman akun/invite.' }
@@ -1149,9 +1090,6 @@
                 }
                 const parsed = JSON.parse(raw);
                 if (!Array.isArray(parsed.staffLogs)) parsed.staffLogs = [];
-                if (!parsed.settings.rolePins) {
-                    parsed.settings.rolePins = getDefaultSeedData().settings.rolePins;
-                }
                 return parsed;
             } catch (e) {
                 return getDefaultSeedData();
@@ -1332,12 +1270,10 @@
             const storeView = document.getElementById('view-storefront');
             const staffView = document.getElementById('view-staff-dashboard');
             if (viewName === 'staff') {
-                if (!isStaffAuthenticated || !activeSilentRole) { openStaffAccess(); return; }
+                if (!isStaffAuthenticated) { openStaffAccess(); return; }
                 storeView.classList.add('hidden');
                 staffView.classList.remove('hidden');
-                applySilentRoleTabVisibility();
-                const allowedTabs = SILENT_ROLE_PERMISSIONS[activeSilentRole] || ['orders'];
-                switchStaffTab(allowedTabs[0]);
+                switchStaffTab('stats');
             } else {
                 staffView.classList.add('hidden');
                 storeView.classList.remove('hidden');
@@ -1345,14 +1281,6 @@
                 renderStorefront();
             }
             syncStoreBrandingAndMaintenance();
-        }
-
-        function applySilentRoleTabVisibility() {
-            const allowedTabs = SILENT_ROLE_PERMISSIONS[activeSilentRole] || [];
-            document.querySelectorAll('.staff-tab-btn').forEach(btn => {
-                const tabName = btn.getAttribute('data-tab');
-                btn.classList.toggle('hidden', !allowedTabs.includes(tabName));
-            });
         }
 
         function renderStorefront() {
@@ -1965,9 +1893,30 @@
             };
             appData.tickets.unshift(ticket);
             saveAppData();
-        // STAFF AUTHENTICATION (SILENT MULTI-ROLE — TANPA NAMA ROLE & TANPA BOCORAN SANDI)
+            e.target.reset();
+            renderCustomerTicketsList();
+            showToast(`Tiket bantuan ${ticket.id} berhasil dikirim!`, 'success');
+        }
+
+        function renderCustomerTicketsList() {
+            const container = document.getElementById('customer-tickets-list');
+            container.innerHTML = appData.tickets.length === 0
+                ? `<p class="text-xs text-slate-500">Belum ada tiket yang dikirim.</p>`
+                : appData.tickets.map(t => `
+                    <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono font-bold text-purple-400">${escapeHtml(t.id)} (Inv: ${escapeHtml(t.invoice)})</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${t.status === 'Resolved' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}">${escapeHtml(t.status)}</span>
+                        </div>
+                        <p class="text-slate-300">${escapeHtml(t.message)}</p>
+                        ${t.reply ? `<div class="p-2 rounded-lg bg-indigo-950/50 border border-indigo-500/30 text-indigo-200"><strong>Balasan CS:</strong> ${escapeHtml(t.reply)}</div>` : ''}
+                    </div>
+                `).join('');
+        }
+
+        // STAFF AUTHENTICATION (TANPA ROLE & TANPA BOCORAN SANDI)
         function openStaffAccess() {
-            if (isStaffAuthenticated && activeSilentRole) { switchView('staff'); return; }
+            if (isStaffAuthenticated) { switchView('staff'); return; }
             document.getElementById('staff-login-pin-input').value = '';
             document.getElementById('staff-login-modal').classList.remove('hidden');
         }
@@ -1976,57 +1925,36 @@
             document.getElementById('staff-login-modal').classList.add('hidden');
         }
 
-        function resolveRoleFromPin(pinInput) {
-            const pins = appData.settings.rolePins || {};
-            for (const [roleKey, rolePin] of Object.entries(pins)) {
-                if (rolePin && pinInput === rolePin) {
-                    return roleKey;
-                }
-            }
-            return null;
-        }
-
         function handleStaffLogin(e) {
             e.preventDefault();
             const pin = document.getElementById('staff-login-pin-input').value.trim();
-            const matchedRole = resolveRoleFromPin(pin);
-            if (matchedRole) {
-                activeSilentRole = matchedRole;
+            if (pin === appData.settings.staffPin) {
                 isStaffAuthenticated = true;
-                localStorage.setItem(STAFF_SESSION_KEY, matchedRole);
-                recordStaffLog('Sesi akses staf berhasil dibuka.');
+                localStorage.setItem(STAFF_SESSION_KEY, 'true');
+                recordStaffLog('Staf masuk ke Admin Dashboard.');
                 closeStaffLoginModal();
                 showToast('Berhasil masuk ke Admin Dashboard!', 'success');
                 switchView('staff');
             } else {
-                showToast('Sandi akses tidak valid!', 'error');
+                showToast('Sandi akses salah!', 'error');
             }
         }
 
         function logoutStaff() {
-            activeSilentRole = null;
             isStaffAuthenticated = false;
             localStorage.removeItem(STAFF_SESSION_KEY);
-            recordStaffLog('Sesi akses staf diakhiri.');
+            recordStaffLog('Staf keluar dari Admin Dashboard.');
             showToast('Sesi staf telah diakhiri.', 'info');
             switchView('store');
         }
 
         function switchStaffTab(tabName) {
-            const allowedTabs = SILENT_ROLE_PERMISSIONS[activeSilentRole] || [];
-            if (!allowedTabs.includes(tabName)) {
-                tabName = allowedTabs[0] || 'orders';
-            }
             document.querySelectorAll('.staff-tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.staff-tab-btn').forEach(btn => {
-                const isHidden = btn.classList.contains('hidden');
-                btn.className = `${isHidden ? 'hidden ' : ''}staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-cyber-card text-slate-400 hover:text-white border border-cyber-border transition flex items-center gap-2 shrink-0`;
+                btn.className = 'staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-cyber-card text-slate-400 hover:text-white border border-cyber-border transition flex items-center gap-2 shrink-0';
             });
             document.getElementById(`staff-tab-${tabName}`).classList.remove('hidden');
-            const activeTabBtn = document.getElementById(`tab-btn-${tabName}`);
-            if (activeTabBtn) {
-                activeTabBtn.className = 'staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-600 text-white transition flex items-center gap-2 shrink-0';
-            }
+            document.getElementById(`tab-btn-${tabName}`).className = 'staff-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-600 text-white transition flex items-center gap-2 shrink-0';
             renderAllStaffPanels();
         }
 
@@ -2408,7 +2336,6 @@
                 showToast('Waktu berakhir maintenance harus lebih lambat dari waktu mulai!', 'error');
                 return;
             }
-            const targetLevel = document.getElementById('setting-role-target').value;
             const newPin = document.getElementById('setting-staff-pin').value.trim();
             appData.settings.maintenanceMode = document.getElementById('setting-maint-toggle').checked;
             appData.settings.maintenanceStart = startVal;
@@ -2416,9 +2343,7 @@
             appData.settings.maintenanceMessage = document.getElementById('setting-maint-msg').value.trim();
             appData.settings.storeName = document.getElementById('setting-store-name').value.trim() || 'Zidzzz Store';
             appData.settings.adminWhatsapp = document.getElementById('setting-admin-wa').value.trim();
-            if (newPin && appData.settings.rolePins && appData.settings.rolePins[targetLevel] !== undefined) {
-                appData.settings.rolePins[targetLevel] = newPin;
-            }
+            if (newPin) appData.settings.staffPin = newPin;
             appData.settings.announcement = document.getElementById('setting-announcement').value.trim();
             document.getElementById('setting-staff-pin').value = '';
             recordStaffLog('Menyimpan perubahan pengaturan toko & jadwal maintenance.');
